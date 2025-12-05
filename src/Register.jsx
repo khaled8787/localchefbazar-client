@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth } from "./firebase.init"; // তোমার firebase init ফাইল অনুযায়ী adjust করো
 import { toast } from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router";
 
 const RegisterPage = () => {
   const {
@@ -144,6 +144,12 @@ const RegisterPage = () => {
             {loading ? "Registering..." : "Register"}
           </button>
         </form>
+         <p className="text-center text-gray-500">
+          Already have an account?{" "}
+          <Link to="/login" className="text-blue-600 hover:underline">
+            Login
+          </Link>
+        </p>
       </div>
     </div>
   );
