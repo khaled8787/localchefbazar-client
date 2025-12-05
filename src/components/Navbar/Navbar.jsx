@@ -3,7 +3,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../AuthContext";
 
 const Navbar = () => {
-  const { user, logout } = useContext(AuthContext);
+  const { user, logOut } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const getLinkStyle = ({ isActive }) => ({
@@ -81,7 +81,7 @@ const Navbar = () => {
                 </div>
               )}
               <button
-                onClick={logout}
+                onClick={logOut}
                 className="px-4 py-1 rounded-md bg-red-500 text-white hover:bg-red-600 transition"
               >
                 Logout
@@ -126,7 +126,7 @@ const Navbar = () => {
               </>
             ) : (
               <li>
-                <button onClick={logout} className="w-full text-left px-2 py-1 rounded hover:bg-gray-100">
+                <button onClick={logOut} className="w-full text-left px-2 py-1 rounded hover:bg-gray-100">
                   Logout
                 </button>
               </li>
