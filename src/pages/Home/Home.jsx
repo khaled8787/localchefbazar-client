@@ -2,6 +2,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import ChefsSection from "../../chefSection";
 import DailyMealsSection from "../../DailyMealsSection";
+import HomeReviewsSection from "../../Reviews";
 
 const Hero = () => {
   return (
@@ -64,6 +65,8 @@ const Hero = () => {
       </div>
 
       <DailyMealsSection></DailyMealsSection>
+
+      <HomeReviewsSection></HomeReviewsSection>
 
       <ChefsSection></ChefsSection>
 

@@ -65,7 +65,7 @@ const DailyMealsSection = () => {
               </p>
 
               <button className="btn btn-sm bg-orange-600 text-white w-full mt-4 hover:bg-orange-700">
-                Order Now
+                View Details
               </button>
             </div>
           </motion.div>
