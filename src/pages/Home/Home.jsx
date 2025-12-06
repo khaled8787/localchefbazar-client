@@ -1,67 +1,77 @@
-import React from 'react';
-import { FaGithub, FaLinkedin, FaGlobe, FaUserCircle } from 'react-icons/fa';
+import React from "react";
+import { motion } from "framer-motion";
+import ChefsSection from "../../chefSection";
+import DailyMealsSection from "../../DailyMealsSection";
 
-const Home = () => {
-    return (
-        <div className="min-h-screen bg-linear-to-br from-blue-100 to-purple-100 flex items-center justify-center p-4">
-            <div className="max-w-xl w-full bg-white rounded-2xl shadow-2xl overflow-hidden transform transition-all hover:-translate-y-1 hover:shadow-3xl">
-                <div className="h-32 bg-linear-to-r from-blue-500 to-purple-600"></div>
+const Hero = () => {
+  return (
+    <section className="bg-gradient-to-r from-blue-50 to-white py-16 px-6">
+      <div className="container mx-auto flex flex-col-reverse lg:flex-row items-center gap-12">
 
-                <div className="px-6 pb-6 flex flex-col">
-   
-                    <div className="  w-32 h-32 mx-auto left-0 right-0 flex items-center justify-center">
-                        <div className="w-full h-full bg-white rounded-full border-4 border-white shadow-lg flex items-center justify-center">
-                            <FaUserCircle className="w-full h-full text-gray-400" />
-                        </div>
-                    </div>
+        {/* LEFT CONTENT */}
+        <motion.div
+          className="flex-1 text-center lg:text-left"
+          initial={{ opacity: 0, x: -40 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.8 }}
+        >
+          <h1 className="text-4xl lg:text-6xl font-bold text-gray-900 leading-tight">
+            Fresh, Homemade Meals  
+            <span className="text-blue-600"> Delivered to You.</span>
+          </h1>
 
-                    <div className="mt-5 text-center">
-                        <h1 className="text-3xl font-bold text-gray-800 mb-2">
-                            Abir Abdullah
-                        </h1>
-                        <p className="text-gray-600 mb-4">Full Stack Developer</p>
-                        
-                        <div className="flex justify-center gap-4 mb-6">
-                            <a 
-                                href="https://github.com/abirabdullahs" 
-                                target="_blank" 
-                                rel="noopener noreferrer"
-                                className="text-gray-600 hover:text-blue-600 transition-colors"
-                            >
-                                <FaGithub size={24} />
-                            </a>
-                            <a 
-                                href="https://linkedin.com/in/abirabdullahofficial" 
-                                target="_blank" 
-                                rel="noopener noreferrer"
-                                className="text-gray-600 hover:text-blue-600 transition-colors"
-                            >
-                                <FaLinkedin size={24} />
-                            </a>
-                            <a 
-                                href="https://abirabdullah.me" 
-                                target="_blank" 
-                                rel="noopener noreferrer"
-                                className="text-gray-600 hover:text-blue-600 transition-colors"
-                            >
-                                <FaGlobe size={24} />
-                            </a>
-                        </div>
+          <p className="mt-4 text-gray-600 text-lg max-w-xl">
+            Discover delicious home-cooked meals prepared by talented local chefs.  
+            Enjoy healthy, hygienic food at affordable prices — anytime, anywhere.
+          </p>
 
-                        {/* View Portfolio Button */}
-                        <a 
-                            href="https://abirabdullah.me" 
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                            className="inline-block bg-linear-to-r from-blue-500 to-purple-600 text-white px-8 py-3 rounded-full font-semibold hover:opacity-90 transition-opacity"
-                        >
-                            View Portfolio
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    );
+          {/* SEARCH BAR */}
+          <div className="mt-6 flex gap-2 justify-center lg:justify-start">
+            <input
+              type="text"
+              placeholder="Search meals..."
+              className="input input-bordered w-full lg:w-72"
+            />
+            <button className="px-5 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition">
+              Search
+            </button>
+          </div>
+
+          {/* CTA BUTTONS */}
+          <div className="mt-6 flex gap-4 justify-center lg:justify-start">
+            <button className="px-6 py-3 bg-green-600 text-white rounded-md hover:bg-green-700 transition">
+              Order Now
+            </button>
+            <button className="px-6 py-3 border border-blue-600 text-blue-600 rounded-md hover:bg-blue-50 transition">
+              Become a Chef
+            </button>
+          </div>
+        </motion.div>
+
+        {/* RIGHT IMAGE */}
+        <motion.div
+          className="flex-1 flex justify-center"
+          initial={{ opacity: 0, x: 40 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.8 }}
+        >
+          <img
+            src="https://media.istockphoto.com/id/970096086/photo/people-in-a-cooking-class-enjoying-their-time.jpg?b=1&s=612x612&w=0&k=20&c=iUqqxEwsZn3rT3y1IF-U0hRfXLtumxiHW8EGGPpsxro="
+            alt="Chef"
+            className="w-full max-w-md drop-shadow-lg"
+          />
+        </motion.div>
+      </div>
+
+      <DailyMealsSection></DailyMealsSection>
+
+      <ChefsSection></ChefsSection>
+
+      
+    </section>
+
+    
+  );
 };
 
-export default Home;
+export default Hero;
