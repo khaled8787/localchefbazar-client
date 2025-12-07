@@ -1,13 +1,12 @@
 import axios from "axios";
 
 const axiosPublic = axios.create({
-  baseURL: import.meta.env.VITE_server_url,
+  baseURL: import.meta.env.VITE_SERVER_URL,
 });
 
 // 🔥 Token auto attach
 axiosPublic.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
-  console.log('token', token)
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
     
