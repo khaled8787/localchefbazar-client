@@ -2,6 +2,7 @@ import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { FiTrash2, FiUserCheck } from "react-icons/fi";
 import useAxiosPublic from "../AxiosSecure";
+import Swal from "sweetalert2";
 
 const Users = () => {
   const axiosInstance = useAxiosPublic(); // 🔹 Axios instance একবার বানানো
@@ -36,16 +37,27 @@ const Users = () => {
 
   // 🔥 Delete User
   const handleDelete = async (id) => {
-    const confirmed = confirm("Are you sure you want to delete this user?");
-    if (!confirmed) return;
-
-    try {
-      await axiosInstance.delete(`/users/${id}`);
-      refetch();
-    } catch (err) {
-      console.error("Delete failed:", err);
+  Swal.fire({
+    title: "Are you sure?",
+    text: "This user will be permanently deleted!",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Yes, delete it!",
+  }).then(async (result) => {
+    if (result.isConfirmed) {
+      try {
+        await axiosInstance.delete(`/users/${id}`);
+        Swal.fire("Deleted!", "User has been removed.", "success");
+        refetch();
+      } catch (err) {
+        console.error("Delete failed:", err);
+        Swal.fire("Error!", "Something went wrong!", "error");
+      }
     }
-  };
+  });
+};
 
   if (isLoading) {
     return (
