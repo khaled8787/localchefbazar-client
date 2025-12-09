@@ -9,7 +9,6 @@ const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // ---------------- SAVE USER IN DB ----------------
   const saveUserToDB = async (user) => {
     console.log("Saving user to DB:", user); 
     try {
@@ -21,10 +20,8 @@ const AuthProvider = ({ children }) => {
       console.error("Failed to save user:", err);
     }
   };
-  console.log("SERVER_URL =", import.meta.env.VITE_SERVER_URL);
 
 
-  // ---------------- JWT ----------------
   const getJWT = async (email) => {
     try {
       const res = await axios.post(`${import.meta.env.VITE_server_url}/jwt`, { email });
@@ -35,44 +32,36 @@ const AuthProvider = ({ children }) => {
     }
   };
 
-  // ---------------- Register ----------------
   const registerUser = async (email, password) => {
     setLoading(true);
     const result = await createUserWithEmailAndPassword(auth, email, password);
 
-    // Save to DB
     await saveUserToDB(result.user);
 
-    // JWT Issue
     await getJWT(result.user.email);
 
     return result;
   };
 
-  // ---------------- Sign In ----------------
   const signInUser = async (email, password) => {
     setLoading(true);
     const result = await signInWithEmailAndPassword(auth, email, password);
 
-    // JWT Issue
     await getJWT(email);
 
     return result;
   };
 
-  // ---------------- Log Out ----------------
   const logOut = () => {
     setLoading(true);
     localStorage.removeItem("token");
     return signOut(auth);
   };
 
-  // ---------------- Update Profile ----------------
   const updateUserProfile = (profile) => {
     return updateProfile(auth.currentUser, profile);
   };
 
-  // ---------------- Observer ----------------
   useEffect(() => {
     const unSubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);

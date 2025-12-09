@@ -26,17 +26,14 @@ const RegisterPage = () => {
 
     setLoading(true);
     try {
-      // Firebase user create
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
-      // Update profile
       await updateProfile(user, {
         displayName: name,
         photoURL: photoURL || "https://i.ibb.co/default-profile.png",
       });
 
-      // Optionally save user in MongoDB (role: user, status: active)
       await fetch(`${import.meta.env.VITE_SERVER_URL}/users`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -51,7 +48,7 @@ const RegisterPage = () => {
       });
 
       toast.success("Registration successful!");
-      navigate("/"); // বা login page
+      navigate("/"); 
     } catch (error) {
       toast.error(error.message);
     } finally {
@@ -64,7 +61,6 @@ const RegisterPage = () => {
       <div className="w-full max-w-md p-8 space-y-4 bg-white rounded shadow">
         <h2 className="text-2xl font-bold text-center">Register</h2>
         <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
-          {/* Name */}
           <div>
             <label className="block font-medium">Name</label>
             <input
@@ -76,7 +72,6 @@ const RegisterPage = () => {
             {errors.name && <p className="text-red-500">{errors.name.message}</p>}
           </div>
 
-          {/* Email */}
           <div>
             <label className="block font-medium">Email</label>
             <input
@@ -88,7 +83,6 @@ const RegisterPage = () => {
             {errors.email && <p className="text-red-500">{errors.email.message}</p>}
           </div>
 
-          {/* Profile Image */}
           <div>
             <label className="block font-medium">Profile Image URL</label>
             <input
@@ -99,7 +93,6 @@ const RegisterPage = () => {
             />
           </div>
 
-          {/* Address */}
           <div>
             <label className="block font-medium">Address</label>
             <input
@@ -111,7 +104,6 @@ const RegisterPage = () => {
             {errors.address && <p className="text-red-500">{errors.address.message}</p>}
           </div>
 
-          {/* Password */}
           <div>
             <label className="block font-medium">Password</label>
             <input
@@ -123,7 +115,6 @@ const RegisterPage = () => {
             {errors.password && <p className="text-red-500">{errors.password.message}</p>}
           </div>
 
-          {/* Confirm Password */}
           <div>
             <label className="block font-medium">Confirm Password</label>
             <input
@@ -135,7 +126,6 @@ const RegisterPage = () => {
             {errors.confirmPassword && <p className="text-red-500">{errors.confirmPassword.message}</p>}
           </div>
 
-          {/* Submit Button */}
           <button
             type="submit"
             className={`btn btn-primary w-full ${loading ? "loading" : ""}`}

@@ -4,7 +4,6 @@ const axiosPublic = axios.create({
   baseURL: import.meta.env.VITE_SERVER_URL,
 });
 
-// 🔥 Token auto attach
 axiosPublic.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
   if (token) {
@@ -14,13 +13,11 @@ axiosPublic.interceptors.request.use((config) => {
   return config;
 });
 
-// Optional: token error হলে handle
 axiosPublic.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401 || error.response?.status === 403) {
       console.log("⛔ Unauthorized / Forbidden");
-      // চাইলে logout বা redirect করতে পারো
     }
     return Promise.reject(error);
   }

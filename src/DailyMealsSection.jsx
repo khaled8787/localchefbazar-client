@@ -1,16 +1,15 @@
 import { motion } from "framer-motion";
 import { Star } from "react-feather";
 import { useQuery } from "@tanstack/react-query";
-import useAxiosPublic from "./AxiosSecure"; // ✅ useAxiosPublic import
+import useAxiosPublic from "./AxiosSecure"; 
 
 const DailyMealsSection = () => {
-  const axiosPublic = useAxiosPublic(); // ✅ hook ব্যবহার
+  const axiosPublic = useAxiosPublic(); 
 
-  // Fetch meals from server
   const { data: meals = [], isLoading, error } = useQuery({
     queryKey: ["daily-meals"],
     queryFn: async () => {
-      const res = await axiosPublic.get("/meals?limit=6"); // ✅ hook দিয়ে call
+      const res = await axiosPublic.get("/meals?limit=6"); 
       return res.data;
     },
   });
@@ -27,7 +26,6 @@ const DailyMealsSection = () => {
 
   return (
     <section className="py-20 bg-gray-50">
-      {/* Section Title */}
       <motion.h2
         initial={{ opacity: 0, y: -20 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -37,7 +35,6 @@ const DailyMealsSection = () => {
         🍽️ Today's <span className="text-orange-600">Daily Meals</span>
       </motion.h2>
 
-      {/* Meals Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 px-6 md:px-10">
         {meals.map((meal) => (
           <motion.div

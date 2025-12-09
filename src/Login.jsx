@@ -9,7 +9,7 @@ const LoginPage = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
-  const from = location.state?.from?.pathname || "/"; // redirect after login
+  const from = location.state?.from?.pathname || "/"; 
 
   const {
     register,
@@ -18,26 +18,41 @@ const LoginPage = () => {
   } = useForm();
 
   const onSubmit = async (data) => {
-    const { email, password } = data;
-    setLoading(true);
+  const { email, password } = data;
+  setLoading(true);
 
-    try {
-      await signInUser(email, password);
-      toast.success("Login successful!");
-      navigate(from, { replace: true });
-    } catch (error) {
-      toast.error(error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+  try {
+    // Firebase login
+    const userCredential = await signInUser(email, password);
+    const user = userCredential.user;
+
+    // 🔹 Server থেকে JWT fetch
+    const response = await fetch(`${import.meta.env.VITE_SERVER_URL}/jwt`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: user.email }),
+    });
+
+    const { token } = await response.json();
+    localStorage.setItem("token", token);  // 🔹 JWT save
+
+    console.log("JWT token after login:", localStorage.getItem("token")); // debug
+
+    toast.success("Login successful!");
+    navigate(from, { replace: true });
+  } catch (error) {
+    toast.error(error.message);
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   return (
     <div className="min-h-screen flex justify-center items-center bg-gray-50">
       <div className="w-full max-w-md p-8 space-y-4 bg-white rounded shadow">
         <h2 className="text-2xl font-bold text-center">Login</h2>
         <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
-          {/* Email */}
           <div>
             <label className="block font-medium">Email</label>
             <input
@@ -49,7 +64,6 @@ const LoginPage = () => {
             {errors.email && <p className="text-red-500">{errors.email.message}</p>}
           </div>
 
-          {/* Password */}
           <div>
             <label className="block font-medium">Password</label>
             <input
@@ -61,7 +75,6 @@ const LoginPage = () => {
             {errors.password && <p className="text-red-500">{errors.password.message}</p>}
           </div>
 
-          {/* Submit Button */}
           <button
             type="submit"
             className={`btn btn-primary w-full ${loading ? "loading" : ""}`}

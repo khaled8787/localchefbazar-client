@@ -57,7 +57,6 @@ const chefsData = [
 const ChefsSection = () => {
   return (
     <div className="py-20 bg-gradient-to-b from-white to-orange-50">
-      {/* Title */}
       <motion.h2
         initial={{ opacity: 0, y: -20 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -67,7 +66,6 @@ const ChefsSection = () => {
         🍽️ Explore Our <span className="text-orange-600">Top Chefs</span>
       </motion.h2>
 
-      {/* Desktop Grid */}
       <div className=" grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-10">
         {chefsData.map((chef) => (
           <motion.div
@@ -100,7 +98,6 @@ const ChefsSection = () => {
         ))}
       </div>
 
-      {/* Mobile Swiper */}
       <div className="md:hidden px-6">
         <Swiper spaceBetween={20} slidesPerView={1.2}>
           {chefsData.map((chef) => (

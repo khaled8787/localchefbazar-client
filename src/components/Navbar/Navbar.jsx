@@ -25,13 +25,12 @@ const Navbar = () => {
           Meals
         </NavLink>
       </li>
-      {user && (
         <li>
-          <NavLink to="/dashboard" style={getLinkStyle}>
+          <NavLink to="/admin-sidebar" style={getLinkStyle}>
             Dashboard
           </NavLink>
         </li>
-      )}
+      
     </>
   );
 
