@@ -11,6 +11,8 @@ import Users from '../components/Users';
 import Chefs from '../pages/Chefs';
 import Profile from '../components/MyProfile';
 import CreateMeal from '../components/CreateMeals';
+import AllMeals from '../AllMeals';
+import MyMeals from '../components/MyMeals';
 
 
 
@@ -34,6 +36,10 @@ export const router = createBrowserRouter([
         element: <LoginPage></LoginPage>
       },
       {
+         path: 'meals',
+         element: <AllMeals></AllMeals>
+      },
+      {
         path: 'admin-sidebar',
         element: <PrivateRoute><AdminSidebar></AdminSidebar></PrivateRoute>,
         children:[
@@ -52,6 +58,10 @@ export const router = createBrowserRouter([
           {
             path: 'create-meal',
             element: <CreateMeal></CreateMeal>
+          },
+          {
+            path: 'my-meals',
+            element: <MyMeals></MyMeals>
           }
         ]
       }

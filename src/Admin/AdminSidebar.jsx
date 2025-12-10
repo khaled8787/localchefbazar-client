@@ -120,7 +120,7 @@ const SidebarLayout = () => {
                 </NavLink>
 
                 <NavLink
-                  to="/chef/my-meals"
+                  to="my-meals"
                   className={({ isActive }) =>
                     `${baseClass} ${isActive ? activeClass : normalClass}`
                   }

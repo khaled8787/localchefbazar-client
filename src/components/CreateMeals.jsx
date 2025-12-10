@@ -17,6 +17,7 @@ const CreateMeal = () => {
   const [chefExperience, setChefExperience] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
+  // Ingredient handlers
   const handleIngredientChange = (index, value) => {
     const newIngredients = [...ingredients];
     newIngredients[index] = value;
@@ -29,18 +30,20 @@ const CreateMeal = () => {
     setIngredients(newIngredients);
   };
 
+  // Form submit
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!user) return toast.error("User not found!");
 
     setSubmitting(true);
+
     try {
       const mealData = {
         foodName,
         chefName,
-        foodImage, // Direct URL
+        foodImage,
         price: parseFloat(price),
-        rating,
+        rating: parseFloat(rating),
         ingredients: ingredients.filter((i) => i.trim() !== ""),
         estimatedDeliveryTime,
         chefExperience,
@@ -54,8 +57,11 @@ const CreateMeal = () => {
         mealData
       );
 
-      if (res.data.insertedId || res.data._id) {
+      console.log("Server response:", res.data);
+
+      if (res.data.result?.insertedId) {
         toast.success("Meal created successfully!");
+
         // Reset form
         setFoodName("");
         setFoodImage("");
@@ -64,11 +70,14 @@ const CreateMeal = () => {
         setIngredients([""]);
         setEstimatedDeliveryTime("");
         setChefExperience("");
+      } else {
+        toast.error("Failed to create meal. Server returned no insertedId.");
       }
     } catch (err) {
       console.error(err);
-      toast.error("Failed to create meal.");
+      toast.error("Failed to create meal. See console for details.");
     }
+
     setSubmitting(false);
   };
 
@@ -77,6 +86,7 @@ const CreateMeal = () => {
       <h2 className="text-3xl font-bold text-orange-600 mb-6 text-center">
         Create New Meal
       </h2>
+
       <form
         onSubmit={handleSubmit}
         className="bg-white shadow-lg rounded-xl p-8 space-y-6"
@@ -155,7 +165,9 @@ const CreateMeal = () => {
               <input
                 type="text"
                 value={ingredient}
-                onChange={(e) => handleIngredientChange(index, e.target.value)}
+                onChange={(e) =>
+                  handleIngredientChange(index, e.target.value)
+                }
                 placeholder="Enter ingredient"
                 className="flex-1 border rounded-lg p-2"
                 required
@@ -182,7 +194,9 @@ const CreateMeal = () => {
 
         {/* Estimated Delivery Time */}
         <div>
-          <label className="font-semibold text-gray-700">Estimated Delivery Time</label>
+          <label className="font-semibold text-gray-700">
+            Estimated Delivery Time
+          </label>
           <input
             type="text"
             value={estimatedDeliveryTime}
@@ -200,7 +214,7 @@ const CreateMeal = () => {
             type="text"
             value={chefExperience}
             onChange={(e) => setChefExperience(e.target.value)}
-            placeholder="e.g., 5 years experience in Italian cuisine"
+            placeholder="e.g., 5 years experience"
             className="w-full border rounded-lg p-2 mt-1"
             required
           />
