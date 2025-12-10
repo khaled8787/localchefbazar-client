@@ -1,21 +1,17 @@
 import { useState, useContext } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
 import useAxiosPublic from "./AxiosSecure";
 import { AuthContext } from "./AuthContext";
-
+import MealDetailsModal from "./MealDetailsModal"; // ✅ Modal import
 
 const AllMeals = () => {
   const axiosPublic = useAxiosPublic();
-  const navigate = useNavigate();
 
-  // Auth Context
   const { user } = useContext(AuthContext);
 
-  // Sort State
   const [sortOrder, setSortOrder] = useState("asc");
+  const [selectedMeal, setSelectedMeal] = useState(null); // 🔹 Modal state
 
-  // Fetch Meals From Backend
   const { data: meals = [], isLoading } = useQuery({
     queryKey: ["meals", sortOrder],
     queryFn: async () => {
@@ -24,17 +20,10 @@ const AllMeals = () => {
     },
   });
 
-  const handleSort = () => {
-    setSortOrder(sortOrder === "asc" ? "desc" : "asc");
-  };
+  const handleSort = () => setSortOrder(sortOrder === "asc" ? "desc" : "asc");
 
-  // See Details Logic
-  const handleSeeDetails = (id) => {
-    if (user) {
-      navigate(`/meal/${id}`);
-    } else {
-      navigate("/login");
-    }
+  const handleViewDetails = (meal) => {
+    setSelectedMeal(meal); // 🔹 Open modal with meal data
   };
 
   if (isLoading) return <p className="text-center py-10">Loading meals...</p>;
@@ -44,11 +33,7 @@ const AllMeals = () => {
       {/* Header + Sort Button */}
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">All Meals</h1>
-
-        <button
-          onClick={handleSort}
-          className="btn btn-outline btn-primary"
-        >
+        <button onClick={handleSort} className="btn btn-outline btn-primary">
           Sort by Price: {sortOrder === "asc" ? "Low → High" : "High → Low"}
         </button>
       </div>
@@ -70,30 +55,30 @@ const AllMeals = () => {
 
             <div className="card-body">
               <h2 className="card-title">{meal.foodName}</h2>
-
               <p><strong>Chef:</strong> {meal.chefName}</p>
-              <p><strong>Chef ID:</strong> {meal.chefId}</p>
-
               <p><strong>Price:</strong> ${meal.price}</p>
               <p><strong>Rating:</strong> ⭐ {meal.rating}</p>
 
-              <p>
-                <strong>Delivery Areas:</strong>{" "}
-                {meal.deliveryAreas?.join(", ")}
-              </p>
-
               <div className="card-actions justify-end mt-4">
                 <button
-                  onClick={() => handleSeeDetails(meal._id)}
+                  onClick={() => handleViewDetails(meal)}
                   className="btn btn-primary"
                 >
-                  See Details
+                  View Details
                 </button>
               </div>
             </div>
           </div>
         ))}
       </div>
+
+      {/* Modal */}
+      {selectedMeal && (
+        <MealDetailsModal
+          meal={selectedMeal}
+          close={() => setSelectedMeal(null)}
+        />
+      )}
     </div>
   );
 };
