@@ -15,6 +15,7 @@ const CreateMeal = () => {
   const [ingredients, setIngredients] = useState([""]);
   const [estimatedDeliveryTime, setEstimatedDeliveryTime] = useState("");
   const [chefExperience, setChefExperience] = useState("");
+  const [deliveryArea, setDeliveryArea] = useState(""); // নতুন field
   const [submitting, setSubmitting] = useState(false);
 
   // Ingredient handlers
@@ -47,6 +48,7 @@ const CreateMeal = () => {
         ingredients: ingredients.filter((i) => i.trim() !== ""),
         estimatedDeliveryTime,
         chefExperience,
+        deliveryArea, // save in MongoDB
         chefId: user?._id,
         userEmail: user?.email,
         createdAt: new Date().toISOString(),
@@ -70,6 +72,7 @@ const CreateMeal = () => {
         setIngredients([""]);
         setEstimatedDeliveryTime("");
         setChefExperience("");
+        setDeliveryArea(""); // reset
       } else {
         toast.error("Failed to create meal. Server returned no insertedId.");
       }
@@ -202,6 +205,21 @@ const CreateMeal = () => {
             value={estimatedDeliveryTime}
             onChange={(e) => setEstimatedDeliveryTime(e.target.value)}
             placeholder="e.g., 30 minutes"
+            className="w-full border rounded-lg p-2 mt-1"
+            required
+          />
+        </div>
+
+        {/* Delivery Area */}
+        <div>
+          <label className="font-semibold text-gray-700">
+            Delivery Area
+          </label>
+          <input
+            type="text"
+            value={deliveryArea}
+            onChange={(e) => setDeliveryArea(e.target.value)}
+            placeholder="Enter delivery area"
             className="w-full border rounded-lg p-2 mt-1"
             required
           />

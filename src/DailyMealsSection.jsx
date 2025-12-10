@@ -9,7 +9,7 @@ const DailyMealsSection = () => {
   const { data: meals = [], isLoading, error } = useQuery({
     queryKey: ["daily-meals"],
     queryFn: async () => {
-      const res = await axiosPublic.get("/meals?limit=6"); 
+      const res = await axiosPublic.get("/meals"); // পুরো meals fetch
       return res.data;
     },
   });
@@ -24,6 +24,11 @@ const DailyMealsSection = () => {
       </div>
     );
 
+  // 🔹 Latest 6 meals filter (createdAt descending)
+  const latestMeals = [...meals]
+    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+    .slice(0, 6);
+
   return (
     <section className="py-20 bg-gray-50">
       <motion.h2
@@ -36,7 +41,7 @@ const DailyMealsSection = () => {
       </motion.h2>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 px-6 md:px-10">
-        {meals.map((meal) => (
+        {latestMeals.map((meal) => (
           <motion.div
             key={meal._id}
             whileHover={{ scale: 1.05 }}
