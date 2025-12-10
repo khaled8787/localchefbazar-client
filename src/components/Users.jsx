@@ -28,7 +28,7 @@ const Users = () => {
   // 🔥 Make Chef
   const handleMakeChef = async (id) => {
     try {
-      await axiosInstance.patch(`/users/chef/${id}`);
+      await axiosInstance.put(`/users/chef/${id}`);
       refetch();
     } catch (err) {
       console.error("Make Chef failed:", err);

@@ -44,13 +44,13 @@ const DailyMealsSection = () => {
             className="bg-white rounded-2xl shadow-lg overflow-hidden border border-orange-100 hover:shadow-2xl"
           >
             <img
-              src={meal.image}
-              alt={meal.name}
+              src={meal.foodImage}
+              alt={meal.foodName}
               className="w-full h-56 object-cover"
             />
             <div className="p-5">
-              <h3 className="text-xl font-semibold">{meal.name}</h3>
-              <p className="text-gray-500 mt-1">{meal.description}</p>
+              <h3 className="text-xl font-semibold">{meal.foodName}</h3>
+              <p className="text-gray-500 mt-1">{meal.chefExperience}</p>
 
               <div className="flex items-center gap-2 mt-2">
                 <Star size={18} className="text-orange-500" />

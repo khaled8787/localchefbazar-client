@@ -8,6 +8,9 @@ import LoginPage from '../Login';
 import AdminSidebar from '../Admin/AdminSidebar';
 import PrivateRoute from './PrivateRoute';
 import Users from '../components/Users';
+import Chefs from '../pages/Chefs';
+import Profile from '../components/MyProfile';
+import CreateMeal from '../components/CreateMeals';
 
 
 
@@ -37,6 +40,18 @@ export const router = createBrowserRouter([
           {
             path: 'users',
             element: <Users></Users>
+          },
+          {
+            path: 'chefs',
+            element: <Chefs></Chefs>
+          },
+          {
+            path: 'profile',
+            element: <Profile></Profile>
+          },
+          {
+            path: 'create-meal',
+            element: <CreateMeal></CreateMeal>
           }
         ]
       }
