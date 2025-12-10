@@ -11,7 +11,6 @@ const MyMeals = () => {
 
   const [selectedMeal, setSelectedMeal] = useState(null);
 
-  // 🔥 My meals fetch
   const { data: meals = [], refetch } = useQuery({
   queryKey: ["myMeals", user?.email],
   queryFn: async () => {
@@ -24,7 +23,6 @@ const MyMeals = () => {
 });
 
 
-  // ❌ Delete Meal
   const handleDelete = async (id) => {
     const confirm = await Swal.fire({
       title: "Are you sure?",
@@ -48,7 +46,6 @@ const MyMeals = () => {
     <div className="p-6">
       <h1 className="text-3xl font-bold mb-6 text-center">My Meals</h1>
 
-      {/* Grid layout */}
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
 
         {meals.map((meal) => (
@@ -95,7 +92,6 @@ const MyMeals = () => {
 
       </div>
 
-      {/* Update Modal */}
       {selectedMeal && (
         <UpdateMealModal
           meal={selectedMeal}
