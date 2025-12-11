@@ -2,11 +2,12 @@ import React, { useContext, useState } from "react";
 import Swal from "sweetalert2";
 import { AuthContext } from "./AuthContext";
 import useAxiosPublic from "./AxiosSecure";
+import { useNavigate } from "react-router";
 
 const MealDetailsModal = ({ meal, close }) => {
   const axiosSecure = useAxiosPublic();
   const { user } = useContext(AuthContext);
-
+  const navigate = useNavigate();
   const [reviewText, setReviewText] = useState("");
   const [reviewerName, setReviewerName] = useState(user?.displayName || "");
   const [reviewerImage, setReviewerImage] = useState(user?.photoURL || "");
@@ -14,9 +15,7 @@ const MealDetailsModal = ({ meal, close }) => {
 
   const [reviews, setReviews] = useState(meal.reviews || []);
 
-  // ============================
-  // ⭐ SUBMIT REVIEW TO MONGODB
-  // ============================
+
   const handleSubmitReview = async () => {
     if (!reviewerName.trim() || !reviewText.trim() || rating === 0)
       return Swal.fire("Error", "Please fill all fields", "error");
@@ -62,9 +61,7 @@ const MealDetailsModal = ({ meal, close }) => {
     }
   };
 
-  // ============================
-  // ❤️ ADD TO FAVORITES
-  // ============================
+
   const handleAddToFavorite = async () => {
     const favoriteData = {
       userEmail: user?.email,
@@ -94,13 +91,11 @@ const MealDetailsModal = ({ meal, close }) => {
     <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
       <div className="bg-white w-11/12 md:w-3/4 lg:w-2/3 max-h-[90vh] overflow-y-auto rounded-2xl shadow-2xl p-6">
 
-        {/* Header */}
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-3xl font-bold">{meal.foodName}</h2>
           <button onClick={close} className="btn btn-ghost text-xl">✖</button>
         </div>
 
-        {/* Meal Info */}
         <div className="flex flex-col md:flex-row gap-6">
           <img
             src={meal.foodImage}
@@ -119,7 +114,7 @@ const MealDetailsModal = ({ meal, close }) => {
             <p><strong>Chef Experience:</strong> {meal.chefExperience}</p>
 
             <div className="flex gap-3 mt-4">
-              <button className="btn btn-success w-1/2">Order Now</button>
+              <button onClick={() => navigate(`/order/${meal._id}`)} className="btn btn-success w-1/2">Order Now</button>
               <button onClick={handleAddToFavorite} className="btn btn-error w-1/2">
                 ❤️ Favorite
               </button>
@@ -127,11 +122,9 @@ const MealDetailsModal = ({ meal, close }) => {
           </div>
         </div>
 
-        {/* Review Section */}
         <div className="mt-6">
           <h3 className="text-2xl font-bold mb-4">Reviews</h3>
 
-          {/* Existing Reviews */}
           <div className="space-y-3 mb-6">
             {reviews.length > 0 ? (
               reviews.map((r) => (
@@ -160,10 +153,8 @@ const MealDetailsModal = ({ meal, close }) => {
             )}
           </div>
 
-          {/* Add Review */}
           <div className="p-4 border rounded-lg bg-gray-50 space-y-3">
 
-            {/* Reviewer Name */}
             <input
               type="text"
               value={reviewerName}
@@ -172,7 +163,6 @@ const MealDetailsModal = ({ meal, close }) => {
               className="w-full border p-2 rounded-lg"
             />
 
-            {/* Reviewer Image */}
             <input
               type="text"
               value={reviewerImage}
@@ -181,7 +171,6 @@ const MealDetailsModal = ({ meal, close }) => {
               className="w-full border p-2 rounded-lg"
             />
 
-            {/* Rating */}
             <div className="flex gap-1 text-2xl">
               {[1, 2, 3, 4, 5].map((num) => (
                 <span
@@ -194,7 +183,6 @@ const MealDetailsModal = ({ meal, close }) => {
               ))}
             </div>
 
-            {/* Review Comment */}
             <textarea
               value={reviewText}
               onChange={(e) => setReviewText(e.target.value)}

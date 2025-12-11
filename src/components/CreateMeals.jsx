@@ -49,7 +49,7 @@ const CreateMeal = () => {
         estimatedDeliveryTime,
         chefExperience,
         deliveryArea, // save in MongoDB
-        chefId: user?._id,
+        chefId: user?.uid,
         userEmail: user?.email,
         createdAt: new Date().toISOString(),
       };

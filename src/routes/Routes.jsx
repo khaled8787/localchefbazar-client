@@ -13,6 +13,9 @@ import Profile from '../components/MyProfile';
 import CreateMeal from '../components/CreateMeals';
 import AllMeals from '../AllMeals';
 import MyMeals from '../components/MyMeals';
+import OrderPage from '../OrderPage';
+import OrderRequestsPage from '../OrderRequestPage';
+import MyOrdersPage from '../components/MyOrdersPage';
 
 
 
@@ -40,6 +43,10 @@ export const router = createBrowserRouter([
          element: <AllMeals></AllMeals>
       },
       {
+            path: "/order/:mealId",
+            element: <OrderPage></OrderPage>,
+          },
+      {
         path: 'admin-sidebar',
         element: <PrivateRoute><AdminSidebar></AdminSidebar></PrivateRoute>,
         children:[
@@ -62,6 +69,14 @@ export const router = createBrowserRouter([
           {
             path: 'my-meals',
             element: <MyMeals></MyMeals>
+          },
+          {
+            path: 'orders',
+            element: <OrderRequestsPage></OrderRequestsPage>
+          },
+          {
+            path: 'my-orders',
+            element: <MyOrdersPage></MyOrdersPage>
           }
         ]
       }

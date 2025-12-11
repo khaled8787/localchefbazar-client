@@ -79,7 +79,7 @@ const SidebarLayout = () => {
             {user.role === "user" && (
               <>
                 <NavLink
-                  to="/my-orders"
+                  to="my-orders"
                   className={({ isActive }) =>
                     `${baseClass} ${isActive ? activeClass : normalClass}`
                   }
@@ -129,7 +129,7 @@ const SidebarLayout = () => {
                 </NavLink>
 
                 <NavLink
-                  to="/chef/orders"
+                  to="orders"
                   className={({ isActive }) =>
                     `${baseClass} ${isActive ? activeClass : normalClass}`
                   }
