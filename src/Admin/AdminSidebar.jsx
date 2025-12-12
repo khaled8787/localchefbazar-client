@@ -88,7 +88,7 @@ const SidebarLayout = () => {
                 </NavLink>
 
                 <NavLink
-                  to="/my-reviews"
+                  to="my-reviews"
                   className={({ isActive }) =>
                     `${baseClass} ${isActive ? activeClass : normalClass}`
                   }

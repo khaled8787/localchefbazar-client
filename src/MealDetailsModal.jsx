@@ -21,6 +21,7 @@ const MealDetailsModal = ({ meal, close }) => {
       return Swal.fire("Error", "Please fill all fields", "error");
 
     const newReview = {
+      foodName: meal.foodName,
       foodId: meal._id,
       reviewerName,
       reviewerImage:

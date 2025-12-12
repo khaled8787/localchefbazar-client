@@ -18,6 +18,7 @@ import OrderRequestsPage from '../OrderRequestPage';
 import MyOrdersPage from '../components/MyOrdersPage';
 import PaymentPage from '../components/PaymentPage';
 import PaymentSuccess from '../components/PaymentsSuccess';
+import MyReviewPage from '../components/MyReviewPage';
 
 
 
@@ -88,6 +89,10 @@ export const router = createBrowserRouter([
             path: 'my-orders',
             element: <MyOrdersPage></MyOrdersPage>
           },
+          {
+            path: 'my-reviews',
+            element: <MyReviewPage></MyReviewPage>
+          }
         ]
       }
     ]
