@@ -16,6 +16,8 @@ import MyMeals from '../components/MyMeals';
 import OrderPage from '../OrderPage';
 import OrderRequestsPage from '../OrderRequestPage';
 import MyOrdersPage from '../components/MyOrdersPage';
+import PaymentPage from '../components/PaymentPage';
+import PaymentSuccess from '../components/PaymentsSuccess';
 
 
 
@@ -46,6 +48,14 @@ export const router = createBrowserRouter([
             path: "/order/:mealId",
             element: <OrderPage></OrderPage>,
           },
+           {
+        path: "payment/:id",
+        element: <PaymentPage />,
+      },
+      {
+        path: "payment-success",
+        element: <PaymentSuccess />,
+      },
       {
         path: 'admin-sidebar',
         element: <PrivateRoute><AdminSidebar></AdminSidebar></PrivateRoute>,
@@ -77,7 +87,7 @@ export const router = createBrowserRouter([
           {
             path: 'my-orders',
             element: <MyOrdersPage></MyOrdersPage>
-          }
+          },
         ]
       }
     ]

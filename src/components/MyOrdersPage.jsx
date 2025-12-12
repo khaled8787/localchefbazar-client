@@ -1,30 +1,53 @@
 import React, { useContext } from "react";
 import { useQuery } from "@tanstack/react-query";
 import Swal from "sweetalert2";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../AuthContext";
 import useAxiosPublic from "../AxiosSecure";
 
 const MyOrdersPage = () => {
   const { user } = useContext(AuthContext);
   const axiosSecure = useAxiosPublic();
+  const navigate = useNavigate();
 
-  // Fetch all orders of logged-in user
   const { data: orders = [], isLoading, refetch } = useQuery({
     queryKey: ["myOrders", user?.email],
     queryFn: async () => {
       const res = await axiosSecure.get(`/orders/user/${user?.email}`);
       return res.data;
-    }
+    },
   });
 
   if (isLoading)
     return <div className="text-center py-20 text-xl">Loading orders...</div>;
 
-  // Optional: Refresh success notification
   const handleRefresh = () => {
     refetch();
     Swal.fire("Updated!", "Order list refreshed successfully.", "success");
+  };
+
+  const handlePay = async (order) => {
+    try {
+      const res = await axiosSecure.post("/create-payment-intent", {
+        price: order.price,
+        orderId: order._id,
+        userEmail: user.email,
+      });
+
+      const clientSecret = res.data.clientSecret;
+
+      if (!clientSecret) {
+        Swal.fire("Error", "Stripe payment initialization failed!", "error");
+        return;
+      }
+
+      navigate(`/payment/${order._id}`, {
+        state: { clientSecret, orderId: order._id },
+      });
+    } catch (error) {
+      console.log(error)
+      Swal.fire("Error", "Payment redirect failed!", "error");
+    }
   };
 
   return (
@@ -47,7 +70,6 @@ const MyOrdersPage = () => {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {orders.map((order) => (
-            
             <div
               key={order._id}
               className="bg-white border rounded-2xl shadow-lg hover:shadow-2xl transition p-6"
@@ -70,10 +92,8 @@ const MyOrdersPage = () => {
                   <b>Quantity:</b> {order.quantity}
                 </p>
                 <p>
-                  <b>Delivery Time:</b>{" "}
-                  {new Date(order.orderTime).toLocaleString()}
+                  <b>Delivery Time:</b> {new Date(order.orderTime).toLocaleString()}
                 </p>
-                
                 <p>
                   <b>Chef ID:</b> {order.chefId}
                 </p>
@@ -81,28 +101,24 @@ const MyOrdersPage = () => {
                   <b>Payment Status:</b>{" "}
                   <span
                     className={`px-2 py-1 rounded text-white ${
-                      order.paymentStatus === "paid"
-                        ? "bg-green-600"
-                        : "bg-red-500"
+                      order.paymentStatus === "paid" ? "bg-green-600" : "bg-red-500"
                     }`}
                   >
                     {order.paymentStatus}
                   </span>
                 </p>
               </div>
-                
-              {/* PAY BUTTON LOGIC (Requirement Strict) */}
-              {order.orderStatus === "accepted" &&
-              
-                order.paymentStatus === "Pending" && (
-                  <div className="mt-5">
-                    <Link to={`/payment/${order._id}`}>
-                      <button className="btn w-full bg-orange-500 hover:bg-orange-600 text-white rounded-xl">
-                        Pay Now
-                      </button>
-                    </Link>
-                  </div>
-                )}
+
+              {order.orderStatus === "accepted" && order.paymentStatus === "Pending" && (
+                <div className="mt-5">
+                  <button
+                    onClick={() => handlePay(order)}
+                    className="btn w-full bg-orange-500 hover:bg-orange-600 text-white rounded-xl"
+                  >
+                    Pay Now
+                  </button>
+                </div>
+              )}
             </div>
           ))}
         </div>
