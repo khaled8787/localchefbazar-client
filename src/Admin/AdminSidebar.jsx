@@ -97,7 +97,7 @@ const SidebarLayout = () => {
                 </NavLink>
 
                 <NavLink
-                  to="/favorites"
+                  to="favorites"
                   className={({ isActive }) =>
                     `${baseClass} ${isActive ? activeClass : normalClass}`
                   }

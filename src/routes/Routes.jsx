@@ -19,6 +19,7 @@ import MyOrdersPage from '../components/MyOrdersPage';
 import PaymentPage from '../components/PaymentPage';
 import PaymentSuccess from '../components/PaymentsSuccess';
 import MyReviewPage from '../components/MyReviewPage';
+import FavoriteMealsPage from '../components/FavoriteMealsPage';
 
 
 
@@ -92,6 +93,10 @@ export const router = createBrowserRouter([
           {
             path: 'my-reviews',
             element: <MyReviewPage></MyReviewPage>
+          },
+          {
+            path: 'favorites',
+            element: <FavoriteMealsPage></FavoriteMealsPage>
           }
         ]
       }
