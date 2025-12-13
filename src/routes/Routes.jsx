@@ -21,6 +21,7 @@ import PaymentSuccess from '../components/PaymentsSuccess';
 import MyReviewPage from '../components/MyReviewPage';
 import FavoriteMealsPage from '../components/FavoriteMealsPage';
 import ManageRequests from '../components/ManageRequests';
+import PlatformStatistics from '../components/PlatformStatistics';
 
 
 
@@ -102,6 +103,10 @@ export const router = createBrowserRouter([
           {
             path: 'requests',
             element: <ManageRequests></ManageRequests>
+          },
+          {
+            path: 'platform',
+            element: <PlatformStatistics></PlatformStatistics>
           }
         ]
       }

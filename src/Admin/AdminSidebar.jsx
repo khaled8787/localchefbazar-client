@@ -10,6 +10,7 @@ import {
   FaUserTie,
   FaPlus,
   FaBars,
+  FaChartPie,
 } from "react-icons/fa";
 import { AuthContext } from "../AuthContext";
 
@@ -158,6 +159,15 @@ const SidebarLayout = () => {
                   }
                 >
                   <FaClipboardList /> Manage Requests
+                </NavLink>
+
+                <NavLink
+                  to="platform"
+                  className={({ isActive }) =>
+                    `${baseClass} ${isActive ? activeClass : normalClass}`
+                  }
+                >
+                  <FaChartPie /> Platform Statistics
                 </NavLink>
               </>
             )}
