@@ -143,7 +143,7 @@ const SidebarLayout = () => {
             {user.role === "admin" && (
               <>
                 <NavLink
-                  to="/admin/users"
+                  to="users"
                   className={({ isActive }) =>
                     `${baseClass} ${isActive ? activeClass : normalClass}`
                   }
@@ -152,7 +152,7 @@ const SidebarLayout = () => {
                 </NavLink>
 
                 <NavLink
-                  to="/admin/requests"
+                  to="requests"
                   className={({ isActive }) =>
                     `${baseClass} ${isActive ? activeClass : normalClass}`
                   }

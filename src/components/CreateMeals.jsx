@@ -1,21 +1,21 @@
 import React, { useContext, useState } from "react";
 import { AuthContext } from "../AuthContext";
-import axios from "axios";
 import { toast } from "react-toastify";
+import useAxiosPublic from "../AxiosSecure";
 
 const CreateMeal = () => {
   const { user } = useContext(AuthContext);
+  const axiosSecure = useAxiosPublic(); // JWT attach automatically
 
   // Form states
   const [foodName, setFoodName] = useState("");
-  const [chefName, setChefName] = useState(user?.displayName || "");
   const [foodImage, setFoodImage] = useState("");
   const [price, setPrice] = useState("");
   const [rating, setRating] = useState(0);
   const [ingredients, setIngredients] = useState([""]);
   const [estimatedDeliveryTime, setEstimatedDeliveryTime] = useState("");
   const [chefExperience, setChefExperience] = useState("");
-  const [deliveryArea, setDeliveryArea] = useState(""); // নতুন field
+  const [deliveryArea, setDeliveryArea] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
   // Ingredient handlers
@@ -26,10 +26,7 @@ const CreateMeal = () => {
   };
 
   const addIngredient = () => setIngredients([...ingredients, ""]);
-  const removeIngredient = (index) => {
-    const newIngredients = ingredients.filter((_, i) => i !== index);
-    setIngredients(newIngredients);
-  };
+  const removeIngredient = (index) => setIngredients(ingredients.filter((_, i) => i !== index));
 
   // Form submit
   const handleSubmit = async (e) => {
@@ -41,29 +38,21 @@ const CreateMeal = () => {
     try {
       const mealData = {
         foodName,
-        chefName,
+        chefName: user.displayName,
         foodImage,
         price: parseFloat(price),
         rating: parseFloat(rating),
         ingredients: ingredients.filter((i) => i.trim() !== ""),
         estimatedDeliveryTime,
         chefExperience,
-        deliveryArea, // save in MongoDB
-        chefId: user?.uid,
-        userEmail: user?.email,
-        createdAt: new Date().toISOString(),
+        deliveryArea,
       };
 
-      const res = await axios.post(
-        `${import.meta.env.VITE_SERVER_URL}/meals`,
-        mealData
-      );
-
+      const res = await axiosSecure.post("/meals", mealData);
       console.log("Server response:", res.data);
 
       if (res.data.result?.insertedId) {
         toast.success("Meal created successfully!");
-
         // Reset form
         setFoodName("");
         setFoodImage("");
@@ -72,13 +61,13 @@ const CreateMeal = () => {
         setIngredients([""]);
         setEstimatedDeliveryTime("");
         setChefExperience("");
-        setDeliveryArea(""); // reset
+        setDeliveryArea("");
       } else {
         toast.error("Failed to create meal. Server returned no insertedId.");
       }
     } catch (err) {
-      console.error(err);
-      toast.error("Failed to create meal. See console for details.");
+      console.error("Create meal error:", err);
+      toast.error(err.response?.data?.message || "Failed to create meal.");
     }
 
     setSubmitting(false);
@@ -92,7 +81,7 @@ const CreateMeal = () => {
 
       <form
         onSubmit={handleSubmit}
-        className="bg-white shadow-lg rounded-xl p-8 space-y-6"
+        className="bg-white shadow-xl rounded-2xl p-8 space-y-6"
       >
         {/* Food Name */}
         <div>
@@ -107,19 +96,7 @@ const CreateMeal = () => {
           />
         </div>
 
-        {/* Chef Name */}
-        <div>
-          <label className="font-semibold text-gray-700">Chef Name</label>
-          <input
-            type="text"
-            value={chefName}
-            onChange={(e) => setChefName(e.target.value)}
-            className="w-full border rounded-lg p-2 mt-1"
-            required
-          />
-        </div>
-
-        {/* Food Image URL */}
+        {/* Food Image */}
         <div>
           <label className="font-semibold text-gray-700">Food Image URL</label>
           <input
@@ -139,7 +116,6 @@ const CreateMeal = () => {
             type="number"
             value={price}
             onChange={(e) => setPrice(e.target.value)}
-            placeholder="Enter price"
             className="w-full border rounded-lg p-2 mt-1"
             required
             step="0.01"
@@ -153,7 +129,6 @@ const CreateMeal = () => {
             type="number"
             value={rating}
             onChange={(e) => setRating(e.target.value)}
-            placeholder="Enter rating"
             className="w-full border rounded-lg p-2 mt-1"
             min="0"
             max="5"
@@ -168,9 +143,7 @@ const CreateMeal = () => {
               <input
                 type="text"
                 value={ingredient}
-                onChange={(e) =>
-                  handleIngredientChange(index, e.target.value)
-                }
+                onChange={(e) => handleIngredientChange(index, e.target.value)}
                 placeholder="Enter ingredient"
                 className="flex-1 border rounded-lg p-2"
                 required
@@ -197,9 +170,7 @@ const CreateMeal = () => {
 
         {/* Estimated Delivery Time */}
         <div>
-          <label className="font-semibold text-gray-700">
-            Estimated Delivery Time
-          </label>
+          <label className="font-semibold text-gray-700">Estimated Delivery Time</label>
           <input
             type="text"
             value={estimatedDeliveryTime}
@@ -212,9 +183,7 @@ const CreateMeal = () => {
 
         {/* Delivery Area */}
         <div>
-          <label className="font-semibold text-gray-700">
-            Delivery Area
-          </label>
+          <label className="font-semibold text-gray-700">Delivery Area</label>
           <input
             type="text"
             value={deliveryArea}
@@ -238,18 +207,7 @@ const CreateMeal = () => {
           />
         </div>
 
-        {/* User Email (read-only) */}
-        <div>
-          <label className="font-semibold text-gray-700">User Email</label>
-          <input
-            type="email"
-            value={user?.email || ""}
-            readOnly
-            className="w-full border rounded-lg p-2 mt-1 bg-gray-100"
-          />
-        </div>
-
-        {/* Submit Button */}
+        {/* Submit */}
         <div className="text-center">
           <button
             type="submit"
