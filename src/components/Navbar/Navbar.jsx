@@ -25,11 +25,13 @@ const Navbar = () => {
           Meals
         </NavLink>
       </li>
-        <li>
+        {
+          user && <li>
           <NavLink to="/admin-sidebar" style={getLinkStyle}>
             Dashboard
           </NavLink>
         </li>
+        }
       
     </>
   );
