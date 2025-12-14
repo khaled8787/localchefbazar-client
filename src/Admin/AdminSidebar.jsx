@@ -68,13 +68,15 @@ const SidebarLayout = () => {
           <nav className="flex flex-col gap-3 text-lg">
             {/* My Profile – সবর জন্য common */}
             <NavLink
-              to="profile"
-              className={({ isActive }) =>
-                `${baseClass} ${isActive ? activeClass : normalClass}`
-              }
-            >
-              <FaUser /> My Profile
-            </NavLink>
+  to={'/admin-sidebar'}
+  end   // 🔹 এইটা লাগবে
+  className={({ isActive }) =>
+    `${baseClass} ${isActive ? activeClass : normalClass}`
+  }
+>
+  <FaUser /> My Profile
+</NavLink>
+
 
             {/* ==================== User Dashboard ==================== */}
             {user.role === "user" && (

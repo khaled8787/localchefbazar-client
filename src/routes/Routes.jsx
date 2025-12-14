@@ -73,7 +73,7 @@ export const router = createBrowserRouter([
             element: <Chefs></Chefs>
           },
           {
-            path: 'profile',
+            index: true,
             element: <Profile></Profile>
           },
           {

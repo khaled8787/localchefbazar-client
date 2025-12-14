@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import { AuthContext } from "./AuthContext";
 import useAxiosPublic from "./AxiosSecure";
@@ -8,60 +8,49 @@ const MealDetailsModal = ({ meal, close }) => {
   const axiosSecure = useAxiosPublic();
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
+
   const [reviewText, setReviewText] = useState("");
   const [reviewerName, setReviewerName] = useState(user?.displayName || "");
   const [reviewerImage, setReviewerImage] = useState(user?.photoURL || "");
   const [rating, setRating] = useState(0);
 
-  const [reviews, setReviews] = useState(meal.reviews || []);
+  const [reviews, setReviews] = useState([]);
 
+  // ✅ FETCH REVIEWS FOR THIS MEAL
+  useEffect(() => {
+    axiosSecure.get(`/reviews?foodId=${meal._id}`).then(res => {
+      setReviews(res.data);
+    });
+  }, [meal._id, axiosSecure]);
 
   const handleSubmitReview = async () => {
     if (!reviewerName.trim() || !reviewText.trim() || rating === 0)
       return Swal.fire("Error", "Please fill all fields", "error");
 
     const newReview = {
-      foodName: meal.foodName,
       foodId: meal._id,
+      foodName: meal.foodName,
       reviewerName,
       reviewerImage:
         reviewerImage || "https://i.ibb.co/2Yf6s0b/default-avatar.png",
       rating,
       comment: reviewText,
-      date: new Date().toISOString(),
+      date: new Date(),
     };
 
     try {
       const res = await axiosSecure.post("/reviews", newReview);
 
       if (res.data.insertedId) {
-        setReviews([
-          {
-            id: Date.now(),
-            name: reviewerName,
-            image:
-              reviewerImage ||
-              "https://i.ibb.co/2Yf6s0b/default-avatar.png",
-            rating,
-            text: reviewText,
-            date: new Date().toLocaleString(),
-          },
-          ...reviews,
-        ]);
-
+        setReviews([newReview, ...reviews]);
         Swal.fire("Success!", "Review submitted successfully!", "success");
-
-        setReviewerName("");
-        setReviewerImage("");
         setReviewText("");
         setRating(0);
       }
     } catch (error) {
-      console.log(error)
       Swal.fire("Error", "Something went wrong!", "error");
     }
   };
-
 
   const handleAddToFavorite = async () => {
     const favoriteData = {
@@ -83,25 +72,24 @@ const MealDetailsModal = ({ meal, close }) => {
         Swal.fire("Info", "This meal is already in your favorites!", "info");
       }
     } catch (err) {
-      console.log(err)
       Swal.fire("Error", "Something went wrong!", "error");
     }
   };
 
   return (
     <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
-      <div className="bg-white w-11/12 md:w-3/4 lg:w-2/3 max-h-[90vh] overflow-y-auto rounded-2xl shadow-2xl p-6">
+      <div className="bg-white w-11/12 md:w-4/5 lg:w-3/4 max-h-[90vh] overflow-y-auto rounded-2xl shadow-2xl p-6">
 
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-3xl font-bold">{meal.foodName}</h2>
           <button onClick={close} className="btn btn-ghost text-xl">✖</button>
         </div>
 
-        <div className="flex flex-col md:flex-row gap-6">
+        <div className="flex flex-col lg:flex-row gap-6">
           <img
             src={meal.foodImage}
             alt={meal.foodName}
-            className="w-full md:w-1/3 h-64 object-cover rounded-lg"
+            className="w-full lg:w-1/3 h-64 object-cover rounded-lg"
           />
 
           <div className="flex-1 space-y-2">
@@ -109,8 +97,8 @@ const MealDetailsModal = ({ meal, close }) => {
             <p><strong>Chef ID:</strong> {meal.chefId}</p>
             <p><strong>Price:</strong> ${meal.price}</p>
             <p><strong>Rating:</strong> ⭐ {meal.rating}</p>
-            <p><strong>Ingredients:</strong> {meal.ingredients?.join(", ")}</p>
-            <p><strong>Delivery Areas:</strong> {meal.deliveryAreas?.join(", ")}</p>
+            <p><strong>Ingredients:</strong> {meal.ingredients}</p>
+            <p><strong>Delivery Areas:</strong> {meal.deliveryArea}</p>
             <p><strong>Estimated Delivery Time:</strong> {meal.estimatedDeliveryTime}</p>
             <p><strong>Chef Experience:</strong> {meal.chefExperience}</p>
 
@@ -123,39 +111,37 @@ const MealDetailsModal = ({ meal, close }) => {
           </div>
         </div>
 
-        <div className="mt-6">
-          <h3 className="text-2xl font-bold mb-4">Reviews</h3>
+        {/* ✅ REVIEW SECTION */}
+        <div className="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-6">
 
-          <div className="space-y-3 mb-6">
-            {reviews.length > 0 ? (
-              reviews.map((r) => (
-                <div key={r.id} className="border p-3 rounded-lg bg-gray-50 flex items-start gap-3">
+          {/* LEFT: REVIEW LIST (AUTO SCROLL) */}
+          <div className="border rounded-xl p-4 max-h-[400px] overflow-y-auto">
+            <h3 className="text-2xl font-bold mb-4">Reviews</h3>
 
-                  <img
-                    src={r.image}
-                    alt="user"
-                    className="w-12 h-12 rounded-full object-cover"
-                  />
-
-                  <div>
-                    <p className="font-bold">{r.name}</p>
-
-                    <p className="text-yellow-500">
-                      {"⭐".repeat(r.rating)}{" "}
-                      <span className="text-gray-500 text-sm">{r.date}</span>
-                    </p>
-
-                    <p>{r.text}</p>
-                  </div>
+            {reviews.length > 0 ? reviews.map((r, index) => (
+              <div key={index} className="border p-3 rounded-lg bg-gray-50 flex gap-3 mb-3">
+                <img
+                  src={r.reviewerImage}
+                  className="w-12 h-12 rounded-full object-cover"
+                />
+                <div>
+                  <p className="font-bold">{r.reviewerName}</p>
+                  <p className="text-yellow-500">
+                    {"⭐".repeat(r.rating)}{" "}
+                    <span className="text-gray-500 text-sm">
+                      {new Date(r.date).toLocaleDateString()}
+                    </span>
+                  </p>
+                  <p>{r.comment}</p>
                 </div>
-              ))
-            ) : (
+              </div>
+            )) : (
               <p className="text-gray-500">No reviews yet.</p>
             )}
           </div>
 
-          <div className="p-4 border rounded-lg bg-gray-50 space-y-3">
-
+          {/* RIGHT: SUBMIT REVIEW */}
+          <div className="border rounded-xl p-4 bg-gray-50 space-y-3">
             <input
               type="text"
               value={reviewerName}
@@ -173,14 +159,12 @@ const MealDetailsModal = ({ meal, close }) => {
             />
 
             <div className="flex gap-1 text-2xl">
-              {[1, 2, 3, 4, 5].map((num) => (
+              {[1,2,3,4,5].map(num => (
                 <span
                   key={num}
                   onClick={() => setRating(num)}
                   className={`cursor-pointer ${num <= rating ? "text-yellow-500" : "text-gray-400"}`}
-                >
-                  ★
-                </span>
+                >★</span>
               ))}
             </div>
 

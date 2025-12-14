@@ -6,6 +6,7 @@ const axiosPublic = axios.create({
 
 axiosPublic.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
+  console.log(token)
   if (token) {
     config.headers.authorization = `Bearer ${token}`;
     

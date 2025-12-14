@@ -3,11 +3,14 @@ import { useQuery } from "@tanstack/react-query";
 import useAxiosPublic from "./AxiosSecure";
 import { AuthContext } from "./AuthContext";
 import MealDetailsModal from "./MealDetailsModal"; // ✅ Modal import
+import { useNavigate } from "react-router";
 
 const AllMeals = () => {
   const axiosPublic = useAxiosPublic();
 
   const { user } = useContext(AuthContext);
+  const navigate = useNavigate();
+
 
   const [sortOrder, setSortOrder] = useState("asc");
   const [selectedMeal, setSelectedMeal] = useState(null); // 🔹 Modal state
@@ -23,8 +26,13 @@ const AllMeals = () => {
   const handleSort = () => setSortOrder(sortOrder === "asc" ? "desc" : "asc");
 
   const handleViewDetails = (meal) => {
-    setSelectedMeal(meal); // 🔹 Open modal with meal data
-  };
+  if (!user) {
+    navigate("/login");
+    return;
+  }
+  setSelectedMeal(meal);
+};
+
 
   if (isLoading) return <p className="text-center py-10">Loading meals...</p>;
 
@@ -56,6 +64,7 @@ const AllMeals = () => {
             <div className="card-body">
               <h2 className="card-title">{meal.foodName}</h2>
               <p><strong>Chef:</strong> {meal.chefName}</p>
+              <p><strong>Chef Id:</strong> {meal._id}</p>
               <p><strong>Price:</strong> ${meal.price}</p>
               <p><strong>Rating:</strong> ⭐ {meal.rating}</p>
 
