@@ -1,16 +1,70 @@
-# React + Vite
+# LocalChefBazar
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Project Purpose
+LocalChefBazar একটি full-stack MERN-based web application যেখানে লোকাল শেফরা তাদের তৈরি খাবার লিস্ট করতে পারে এবং ইউজাররা সেই খাবার অর্ডার, রিভিউ ও ফেভারিট করতে পারে।  
+এই প্রজেক্টে role-based system (User, Chef, Admin), secure authentication, payment system এবং dashboard-based management অন্তর্ভুক্ত করা হয়েছে।
 
-Currently, two official plugins are available:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+**Frontend Live URL:** https://rococo-zuccutto-80d144.netlify.app/
 
-## React Compiler
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Key Features
 
-## Expanding the ESLint configuration
+## Authentication & Authorization
+- Firebase Authentication (Email/Password & Google Login)
+- JWT-based protected API routes
+- Role-based access control (User, Chef, Admin)
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Meals & Orders
+- Chef can add, update, and delete meals
+- Users can view meals, sort by price
+- Users can place orders
+- Fraud users are restricted from ordering
+
+## Payment System
+- Stripe payment integration
+- Secure payment intent creation
+- Payment history stored in database
+
+## Reviews & Favorites
+- Users can add, update, and delete reviews
+- Users can add meals to favorites
+- Personal review & favorite management
+
+## Admin Dashboard
+- View all users, chefs, and orders
+- Approve or reject role requests
+- Mark users as fraud
+- Platform statistics (users, orders, payments)
+
+---
+
+## Technologies & NPM Packages Used
+
+## Frontend
+- React
+- React Router
+- Tailwind CSS
+- DaisyUI
+- Axios
+- TanStack React Query
+- Firebase
+- Stripe.js
+- React Hook Form
+- Framer Motion
+- react-icons
+
+###  Backend
+- Node.js
+- Express.js
+- MongoDB
+- JWT
+- Stripe
+- CORS
+- dotenv
+
+---
+
+## Environment Variables
+
+### Backend (.env)
