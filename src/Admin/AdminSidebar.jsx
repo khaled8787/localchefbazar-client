@@ -32,16 +32,13 @@ const SidebarLayout = () => {
     );
   }
 
-  if (!user) return null; // user load না হলে কিছু দেখাবো না
+  if (!user) return null; 
 
   return (
     <div className="drawer lg:drawer-open">
-      {/* Drawer Toggle */}
       <input id="dashboard-drawer" type="checkbox" className="drawer-toggle" />
 
-      {/* Main content */}
       <div className="drawer-content flex flex-col">
-        {/* Mobile navbar */}
         <div className="lg:hidden p-4 shadow-md flex items-center justify-between bg-white/70 backdrop-blur-xl">
           <label htmlFor="dashboard-drawer" className="btn btn-ghost text-2xl">
             <FaBars />
@@ -49,13 +46,11 @@ const SidebarLayout = () => {
           <h2 className="text-xl font-bold text-orange-600">Dashboard</h2>
         </div>
 
-        {/* Page content */}
         <div className="p-5">
           <Outlet />
         </div>
       </div>
 
-      {/* Sidebar */}
       <div className="drawer-side">
         <label htmlFor="dashboard-drawer" className="drawer-overlay"></label>
         <div className="w-64 min-h-full bg-white/60 backdrop-blur-xl border-r shadow-xl p-5 flex flex-col relative">
@@ -66,10 +61,9 @@ const SidebarLayout = () => {
           </h2>
 
           <nav className="flex flex-col gap-3 text-lg">
-            {/* My Profile – সবর জন্য common */}
             <NavLink
   to={'/admin-sidebar'}
-  end   // 🔹 এইটা লাগবে
+  end   
   className={({ isActive }) =>
     `${baseClass} ${isActive ? activeClass : normalClass}`
   }
@@ -78,7 +72,6 @@ const SidebarLayout = () => {
 </NavLink>
 
 
-            {/* ==================== User Dashboard ==================== */}
             {user.role === "user" && (
               <>
                 <NavLink
@@ -110,7 +103,6 @@ const SidebarLayout = () => {
               </>
             )}
 
-            {/* ==================== Chef Dashboard ==================== */}
             {user.role === "chef" && (
               <>
                 <NavLink
@@ -142,7 +134,6 @@ const SidebarLayout = () => {
               </>
             )}
 
-            {/* ==================== Admin Dashboard ==================== */}
             {user.role === "admin" && (
               <>
                 <NavLink

@@ -9,20 +9,18 @@ const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // 👉 Databaseে save করার function
   const saveUserToDB = async (user) => {
     try {
       await axios.post(`${import.meta.env.VITE_SERVER_URL}/users`, {
         name: user.displayName || "No Name",
         email: user.email,
-        role: 'user' // default role
+        role: 'user' 
       });
     } catch (err) {
       console.error("Failed to save user:", err);
     }
   };
 
-  // 👉 JWT আনবে
   const getJWT = async (email) => {
     try {
       const res = await axios.post(`${import.meta.env.VITE_SERVER_URL}/jwt`, { email });
@@ -61,12 +59,11 @@ const AuthProvider = ({ children }) => {
     return updateProfile(auth.currentUser, profile);
   };
 
-  // 🔥 সবচেয়ে গুরুত্বপূর্ণ অংশ — (role load)
   const fetchUserRole = async (email) => {
     try {
       const res = await axios.get(`${import.meta.env.VITE_SERVER_URL}/users/${email}`);
           console.log("🔥 ROLE API RESPONSE:", res.data);
-      return res.data; // {name, email, role}
+      return res.data; 
     } catch (err) {
       console.log("Role fetch failed");
       return null;
@@ -76,16 +73,14 @@ const AuthProvider = ({ children }) => {
   useEffect(() => {
     const unSubscribe = onAuthStateChanged(auth, async (currentUser) => {
       if (currentUser) {
-        // Firebase user আসে
         const roleInfo = await fetchUserRole(currentUser.email);
         console.log("🔥 ROLE API RESPONSE:", roleInfo);
 
-        // role যুক্ত করে user return
         setUser({
           email: currentUser.email,
           displayName: currentUser.displayName,
           photoURL: currentUser.photoURL,
-          role: roleInfo?.role // ডিফল্ট role
+          role: roleInfo?.role 
         });
       } else {
         setUser(null);

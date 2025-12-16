@@ -10,19 +10,17 @@ const CheckoutForm = () => {
   const axiosSecure = useAxiosPublic();
   const stripe = useStripe();
   const elements = useElements();
-  const { id } = useParams(); // orderId
+  const { id } = useParams(); 
   const navigate = useNavigate();
 
   const [clientSecret, setClientSecret] = useState("");
   const [order, setOrder] = useState({});
   const [loading, setLoading] = useState(false);
 
-  // Load order info
   useEffect(() => {
     axiosSecure.get(`/orders/${id}`).then((res) => {
       setOrder(res.data);
 
-      // create payment intent
       axiosSecure
         .post("/create-payment-intent", { price: res.data.price })
         .then((res) => setClientSecret(res.data.clientSecret));
@@ -38,7 +36,6 @@ const CheckoutForm = () => {
     const card = elements.getElement(CardElement);
     if (!card) return;
 
-    // create payment method
     const { error, paymentMethod } = await stripe.createPaymentMethod({
       type: "card",
       card,
@@ -50,7 +47,6 @@ const CheckoutForm = () => {
       return;
     }
 
-    // confirm payment
     const { paymentIntent, error: intentError } =
       await stripe.confirmCardPayment(clientSecret, {
         payment_method: paymentMethod.id,
@@ -63,7 +59,6 @@ const CheckoutForm = () => {
     }
 
     if (paymentIntent.status === "succeeded") {
-      // save payment to backend
       const paymentInfo = {
         email: user.email,
         transactionId: paymentIntent.id,

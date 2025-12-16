@@ -25,7 +25,6 @@ const Users = () => {
     refetch();
   };
 
-  // 🔥 MAKE FRAUD
   const handleMakeFraud = async (id) => {
     Swal.fire({
       title: "Mark as Fraud?",
@@ -106,7 +105,6 @@ const Users = () => {
 
                 <td className="capitalize font-semibold">{user.role}</td>
 
-                {/* STATUS */}
                 <td>
                   {user.status === "fraud" ? (
                     <span className="badge badge-error text-white">Fraud</span>
@@ -117,7 +115,6 @@ const Users = () => {
                   )}
                 </td>
 
-                {/* ACTIONS */}
                 <td className="flex flex-wrap justify-center gap-2">
                   {user.role !== "admin" && (
                     <>
@@ -137,7 +134,6 @@ const Users = () => {
                     </>
                   )}
 
-                  {/* MAKE FRAUD */}
                   {user.role !== "admin" && user.status !== "fraud" && (
                     <button
                       onClick={() => handleMakeFraud(user._id)}

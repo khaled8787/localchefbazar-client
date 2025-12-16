@@ -18,7 +18,6 @@ const UpdateMealModal = ({ meal, close, refetch }) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  // 🔧 Update Meal
   const handleUpdate = async (e) => {
     e.preventDefault();
 

@@ -33,7 +33,7 @@ const Profile = () => {
         _id: userData._id,
         userName: userData.name,
         userEmail: userData.email,
-        requestType: type, // "chef" or "admin"
+        requestType: type, 
         requestStatus: "pending",
         requestTime: new Date().toISOString(),
       };
@@ -66,7 +66,6 @@ const Profile = () => {
   return (
     <div className="max-w-4xl mx-auto p-6">
       <div className="bg-white shadow-xl rounded-2xl p-8 flex flex-col lg:flex-row gap-6 items-center">
-        {/* User Image */}
         <div className="flex-shrink-0">
           <img
             src={userData.photo || "https://via.placeholder.com/150"}
@@ -75,7 +74,6 @@ const Profile = () => {
           />
         </div>
 
-        {/* User Info */}
         <div className="flex-1 space-y-4">
           <h2 className="text-3xl font-bold text-orange-600">{userData.name}</h2>
           <p className="text-gray-700">
@@ -96,9 +94,7 @@ const Profile = () => {
             </p>
           )}
 
-          {/* Buttons */}
           <div className="flex gap-4 mt-4">
-            {/* Be a Chef Button */}
             {userData.role !== "chef" && userData.role !== "admin" && (
               <button
                 onClick={() => sendRequest("chef")}
@@ -109,7 +105,6 @@ const Profile = () => {
               </button>
             )}
 
-            {/* Be an Admin Button */}
             {userData.role !== "admin" && (
               <button
                 onClick={() => sendRequest("admin")}

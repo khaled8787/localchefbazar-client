@@ -2,7 +2,7 @@ import { useState, useContext } from "react";
 import { useQuery } from "@tanstack/react-query";
 import useAxiosPublic from "./AxiosSecure";
 import { AuthContext } from "./AuthContext";
-import MealDetailsModal from "./MealDetailsModal"; // ✅ Modal import
+import MealDetailsModal from "./MealDetailsModal"; 
 import { useNavigate } from "react-router";
 
 const AllMeals = () => {
@@ -13,7 +13,7 @@ const AllMeals = () => {
 
 
   const [sortOrder, setSortOrder] = useState("asc");
-  const [selectedMeal, setSelectedMeal] = useState(null); // 🔹 Modal state
+  const [selectedMeal, setSelectedMeal] = useState(null);
 
   const { data: meals = [], isLoading } = useQuery({
     queryKey: ["meals", sortOrder],
@@ -38,7 +38,6 @@ const AllMeals = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-10">
-      {/* Header + Sort Button */}
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">All Meals</h1>
         <button onClick={handleSort} className="btn btn-outline btn-primary">
@@ -46,7 +45,6 @@ const AllMeals = () => {
         </button>
       </div>
 
-      {/* Cards Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {meals.map((meal) => (
           <div
@@ -81,7 +79,6 @@ const AllMeals = () => {
         ))}
       </div>
 
-      {/* Modal */}
       {selectedMeal && (
         <MealDetailsModal
           meal={selectedMeal}

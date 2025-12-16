@@ -7,7 +7,7 @@ const Navbar = () => {
   const navigate = useNavigate();
 
   const getLinkStyle = ({ isActive }) => ({
-    color: isActive ? "#2563eb" : "#1f2937", // Active blue / inactive gray
+    color: isActive ? "#2563eb" : "#1f2937", 
     borderBottom: isActive ? "2px solid #2563eb" : "none",
     paddingBottom: "2px",
     fontWeight: "500",
@@ -39,19 +39,16 @@ const Navbar = () => {
   return (
     <header className="bg-white shadow-md sticky top-0 z-50">
       <div className="container mx-auto px-4 lg:px-10 flex justify-between items-center h-16">
-        {/* Logo */}
         <div className="flex items-center gap-2">
           <NavLink to="/" className="text-2xl font-bold text-blue-600">
             LocalChefBazaar
           </NavLink>
         </div>
 
-        {/* Desktop Menu */}
         <nav className="hidden lg:flex">
           <ul className="flex gap-8 items-center">{links}</ul>
         </nav>
 
-        {/* Auth Buttons */}
         <div className="hidden lg:flex items-center gap-4">
           {!user ? (
             <>
@@ -91,7 +88,6 @@ const Navbar = () => {
           )}
         </div>
 
-        {/* Mobile Dropdown */}
         <div className="lg:hidden dropdown">
           <label tabIndex={0} className="btn btn-ghost">
             <svg

@@ -6,7 +6,6 @@ const Footer = () => {
     <footer className="bg-neutral text-neutral-content">
       <div className="max-w-7xl mx-auto px-6 py-14 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
 
-        {/* Contact Details */}
         <div>
           <h3 className="text-xl font-semibold mb-4">Contact Us</h3>
           <p className="text-sm mb-2">📍 Natore, Bangladesh</p>
@@ -14,7 +13,6 @@ const Footer = () => {
           <p className="text-sm">✉️ support@localchefbazaar.com</p>
         </div>
 
-        {/* Working Hours */}
         <div>
           <h3 className="text-xl font-semibold mb-4">Working Hours</h3>
           <p className="text-sm mb-2">Saturday - Thursday</p>
@@ -22,7 +20,6 @@ const Footer = () => {
           <p className="text-sm">Friday: Closed</p>
         </div>
 
-        {/* Useful Links */}
         <div>
           <h3 className="text-xl font-semibold mb-4">Quick Links</h3>
           <ul className="space-y-2 text-sm">
@@ -33,7 +30,6 @@ const Footer = () => {
           </ul>
         </div>
 
-        {/* Social Media */}
         <div>
           <h3 className="text-xl font-semibold mb-4">Follow Us</h3>
           <div className="flex gap-4">
@@ -54,7 +50,6 @@ const Footer = () => {
 
       </div>
 
-      {/* Copyright */}
       <div className="border-t border-neutral-content/20 py-4 text-center text-sm">
         © {new Date().getFullYear()} LocalChefBazaar. All Rights Reserved.
       </div>

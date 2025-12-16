@@ -9,7 +9,7 @@ const DailyMealsSection = () => {
   const { data: meals = [], isLoading, error } = useQuery({
     queryKey: ["daily-meals"],
     queryFn: async () => {
-      const res = await axiosPublic.get("/meals"); // পুরো meals fetch
+      const res = await axiosPublic.get("/meals"); 
       return res.data;
     },
   });
@@ -24,7 +24,6 @@ const DailyMealsSection = () => {
       </div>
     );
 
-  // 🔹 Latest 6 meals filter (createdAt descending)
   const latestMeals = [...meals]
     .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
     .slice(0, 6);
@@ -66,9 +65,7 @@ const DailyMealsSection = () => {
                 Price: ${meal.price}
               </p>
 
-              <button className="btn btn-sm bg-orange-600 text-white w-full mt-4 hover:bg-orange-700">
-                View Details
-              </button>
+              
             </div>
           </motion.div>
         ))}

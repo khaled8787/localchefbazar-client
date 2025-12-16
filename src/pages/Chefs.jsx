@@ -1,4 +1,3 @@
-// src/pages/Chefs.jsx
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import Swal from "sweetalert2";
@@ -8,7 +7,6 @@ import useAxiosPublic from "../AxiosSecure";
 const Chefs = () => {
   const axiosInstance = useAxiosPublic();
 
-  // 🔹 Fetch all chefs
   const { data: chefs = [], refetch, isLoading } = useQuery({
     queryKey: ["all-chefs"],
     queryFn: async () => {
@@ -17,7 +15,6 @@ const Chefs = () => {
     },
   });
 
-  // 🔹 Activate / Deactivate Chef
   const handleToggleStatus = async (chef) => {
     try {
       const newStatus = chef.status === "active" ? "inactive" : "active";
@@ -30,7 +27,6 @@ const Chefs = () => {
     }
   };
 
-  // 🔹 Delete Chef
   const handleDelete = async (id) => {
     const result = await Swal.fire({
       title: "Are you sure?",
@@ -79,7 +75,6 @@ const Chefs = () => {
             {chefs.map((chef, idx) => (
               <tr key={chef._id} className="hover">
                 <td>{idx + 1}</td>
-                {/* Chef Info */}
                 <td className="flex items-center gap-3">
                   <img
                     src={chef.photo || "https://i.ibb.co/4pDNDk1/avatar.png"}
@@ -89,11 +84,8 @@ const Chefs = () => {
                     <p className="font-semibold">{chef.name}</p>
                   </div>
                 </td>
-                {/* Email */}
                 <td>{chef.email}</td>
-                {/* Status */}
                 <td className="capitalize font-semibold">{chef.status || "active"}</td>
-                {/* Actions */}
                 <td className="flex items-center justify-center gap-2">
                   <button
                     onClick={() => handleToggleStatus(chef)}

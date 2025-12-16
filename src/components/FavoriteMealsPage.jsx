@@ -9,7 +9,6 @@ const FavoriteMealsPage = () => {
   const axiosSecure = useAxiosPublic();
   const queryClient = useQueryClient();
 
-  // Fetch favorite meals
   const { data: favorites = [], isLoading } = useQuery({
     queryKey: ["favorites", user?.email],
     queryFn: async () => {
@@ -18,7 +17,6 @@ const FavoriteMealsPage = () => {
     },
   });
 
-  // Delete favorite meal
   const deleteMutation = useMutation({
     mutationFn: async (id) => {
       return axiosSecure.delete(`/favorites/${id}`);

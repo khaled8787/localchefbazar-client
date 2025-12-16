@@ -5,9 +5,8 @@ import useAxiosPublic from "../AxiosSecure";
 
 const CreateMeal = () => {
   const { user } = useContext(AuthContext);
-  const axiosSecure = useAxiosPublic(); // JWT attach automatically
+  const axiosSecure = useAxiosPublic(); 
 
-  // Form states
   const [foodName, setFoodName] = useState("");
   const [foodImage, setFoodImage] = useState("");
   const [price, setPrice] = useState("");
@@ -18,7 +17,6 @@ const CreateMeal = () => {
   const [deliveryArea, setDeliveryArea] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
-  // Ingredient handlers
   const handleIngredientChange = (index, value) => {
     const newIngredients = [...ingredients];
     newIngredients[index] = value;
@@ -28,7 +26,6 @@ const CreateMeal = () => {
   const addIngredient = () => setIngredients([...ingredients, ""]);
   const removeIngredient = (index) => setIngredients(ingredients.filter((_, i) => i !== index));
 
-  // Form submit
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!user) return toast.error("User not found!");
@@ -53,7 +50,6 @@ const CreateMeal = () => {
 
       if (res.data.result?.insertedId) {
         toast.success("Meal created successfully!");
-        // Reset form
         setFoodName("");
         setFoodImage("");
         setPrice("");
@@ -83,7 +79,6 @@ const CreateMeal = () => {
         onSubmit={handleSubmit}
         className="bg-white shadow-xl rounded-2xl p-8 space-y-6"
       >
-        {/* Food Name */}
         <div>
           <label className="font-semibold text-gray-700">Food Name</label>
           <input
@@ -96,7 +91,6 @@ const CreateMeal = () => {
           />
         </div>
 
-        {/* Food Image */}
         <div>
           <label className="font-semibold text-gray-700">Food Image URL</label>
           <input
@@ -109,7 +103,6 @@ const CreateMeal = () => {
           />
         </div>
 
-        {/* Price */}
         <div>
           <label className="font-semibold text-gray-700">Price ($)</label>
           <input
@@ -122,7 +115,6 @@ const CreateMeal = () => {
           />
         </div>
 
-        {/* Rating */}
         <div>
           <label className="font-semibold text-gray-700">Rating</label>
           <input
@@ -135,7 +127,6 @@ const CreateMeal = () => {
           />
         </div>
 
-        {/* Ingredients */}
         <div>
           <label className="font-semibold text-gray-700">Ingredients</label>
           {ingredients.map((ingredient, index) => (
@@ -168,7 +159,6 @@ const CreateMeal = () => {
           </button>
         </div>
 
-        {/* Estimated Delivery Time */}
         <div>
           <label className="font-semibold text-gray-700">Estimated Delivery Time</label>
           <input
@@ -181,7 +171,6 @@ const CreateMeal = () => {
           />
         </div>
 
-        {/* Delivery Area */}
         <div>
           <label className="font-semibold text-gray-700">Delivery Area</label>
           <input
@@ -194,7 +183,6 @@ const CreateMeal = () => {
           />
         </div>
 
-        {/* Chef Experience */}
         <div>
           <label className="font-semibold text-gray-700">Chef Experience</label>
           <input
@@ -207,7 +195,6 @@ const CreateMeal = () => {
           />
         </div>
 
-        {/* Submit */}
         <div className="text-center">
           <button
             type="submit"

@@ -16,7 +16,6 @@ const MealDetailsModal = ({ meal, close }) => {
 
   const [reviews, setReviews] = useState([]);
 
-  // ✅ FETCH REVIEWS FOR THIS MEAL
   useEffect(() => {
     axiosSecure.get(`/reviews?foodId=${meal._id}`).then(res => {
       setReviews(res.data);
@@ -111,10 +110,8 @@ const MealDetailsModal = ({ meal, close }) => {
           </div>
         </div>
 
-        {/* ✅ REVIEW SECTION */}
         <div className="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-6">
 
-          {/* LEFT: REVIEW LIST (AUTO SCROLL) */}
           <div className="border rounded-xl p-4 max-h-[400px] overflow-y-auto">
             <h3 className="text-2xl font-bold mb-4">Reviews</h3>
 
@@ -140,7 +137,6 @@ const MealDetailsModal = ({ meal, close }) => {
             )}
           </div>
 
-          {/* RIGHT: SUBMIT REVIEW */}
           <div className="border rounded-xl p-4 bg-gray-50 space-y-3">
             <input
               type="text"

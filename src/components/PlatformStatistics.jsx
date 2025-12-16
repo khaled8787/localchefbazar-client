@@ -36,13 +36,12 @@ const PlatformStatistics = () => {
     fetchStats();
   }, []);
 
-  // Prepare Pie chart data dynamically
   const orderData = [
     { name: "Pending Orders", value: stats.ordersPending },
     { name: "Delivered Orders", value: stats.ordersDelivered },
   ];
 
-  const COLORS = ["#FFA500", "#00C49F"]; // Orange = Pending, Green = Delivered
+  const COLORS = ["#FFA500", "#00C49F"]; 
    console.log("Order Data:", orderData);
 
   return (
@@ -55,7 +54,6 @@ const PlatformStatistics = () => {
         Platform Statistics
       </motion.h1>
 
-      {/* Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <div className="bg-white shadow-lg rounded-2xl p-6 text-center">
           <h2 className="text-lg font-semibold mb-2">Total Users</h2>
@@ -75,9 +73,7 @@ const PlatformStatistics = () => {
         </div>
       </div>
 
-      {/* Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Orders Pie Chart */}
         <div className="bg-white shadow-lg rounded-2xl p-6">
           <h3 className="text-xl font-semibold mb-4 text-center">Orders Overview</h3>
           <ResponsiveContainer width="100%" height={300}>
@@ -106,7 +102,6 @@ const PlatformStatistics = () => {
           </ResponsiveContainer>
         </div>
 
-        {/* Payment Bar Chart */}
         <div className="bg-white shadow-lg rounded-2xl p-6">
           <h3 className="text-xl font-semibold mb-4 text-center">Payment Overview</h3>
           <ResponsiveContainer width="100%" height={300}>

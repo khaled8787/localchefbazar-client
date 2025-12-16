@@ -5,49 +5,44 @@ import useAxiosPublic from "./AxiosSecure";
 import { AuthContext } from "./AuthContext";
 
 const OrderRequestsPage = () => {
-  const { user } = useContext(AuthContext); // Chef logged in
+  const { user } = useContext(AuthContext); 
   const axiosSecure = useAxiosPublic();
 
-  // Step 1: Fetch all meals of this chef
   const { data: chefMeals = [], isLoading: mealsLoading } = useQuery({
     queryKey: ["chefMeals"],
     queryFn: async () => {
       const res = await axiosSecure.get(`/meals/by-chef/${user?.email}`);
-      return res.data; // array of meals
+      return res.data; 
     },
   });
 
-  // Step 2: Fetch all orders
   const { data: orders = [], refetch, isLoading: ordersLoading } = useQuery({
     queryKey: ["orders"],
     queryFn: async () => {
       const res = await axiosSecure.get("/orders");
-      return res.data; // all orders
+      return res.data; 
     },
   });
 
   if (mealsLoading || ordersLoading)
     return <div className="text-center py-10">Loading...</div>;
 
-  // Step 3: Filter orders where order.chefId matches chefMeals._id
   const chefMealIds = chefMeals.map((meal) => meal._id);
   const filteredOrders = orders.filter((order) =>
     chefMealIds.includes(order.chefId)
   );
 
-  // Update order status
   const handleStatusChange = async (orderId, newStatus) => {
     try {
       await axiosSecure.patch(`/orders/${orderId}/status`, { status: newStatus });
       Swal.fire("Success", `Order ${newStatus} successfully!`, "success");
-      refetch(); // live update
+      refetch(); 
     } catch (err) {
       console.error(err);
       Swal.fire("Error", "Failed to update order.", "error");
     }
   };
 
-  // Determine button states
   const isCancelDisabled = (status) => status !== "pending";
   const isAcceptDisabled = (status) => status !== "pending";
   const isDeliverDisabled = (status) => status !== "accepted";
@@ -93,7 +88,6 @@ const OrderRequestsPage = () => {
                 <b>Payment Status:</b> {order.paymentStatus}
               </p>
 
-              {/* Action Buttons */}
               <div className="mt-4 flex gap-2">
                 <button
                   className={`flex-1 btn btn-error ${

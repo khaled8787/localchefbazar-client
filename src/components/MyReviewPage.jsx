@@ -13,10 +13,8 @@ const MyReviewPage = () => {
   const [rating, setRating] = useState("");
   const [comment, setComment] = useState("");
 
-  // FE থেকে সঠিক reviewerName
   const reviewerName = user?.displayName;
 
-  // Fetch reviews
   const { data: reviews = [], isLoading } = useQuery({
     queryKey: ["myReviews", reviewerName],
     queryFn: async () => {
@@ -26,7 +24,6 @@ const MyReviewPage = () => {
     },
   });
 
-  // Delete review
   const deleteMutation = useMutation({
     mutationFn: async (id) => axiosSecure.delete(`/reviews/${id}`),
     onSuccess: () => {
@@ -36,7 +33,6 @@ const MyReviewPage = () => {
     onError: () => Swal.fire("Error", "Failed to delete review.", "error"),
   });
 
-  // Update review
   const updateMutation = useMutation({
     mutationFn: async ({ id, rating, comment }) =>
       axiosSecure.patch(`/reviews/${id}`, { rating, comment }),
@@ -51,7 +47,6 @@ const MyReviewPage = () => {
   if (isLoading)
     return <div className="text-center py-20 text-xl">Loading reviews...</div>;
 
-  // Delete handler
   const handleDelete = (id) => {
     Swal.fire({
       title: "Are you sure?",
@@ -68,7 +63,6 @@ const MyReviewPage = () => {
     });
   };
 
-  // Edit handler
   const handleEdit = (review) => {
     setEditingReview(review);
     setRating(review.rating);
@@ -135,7 +129,6 @@ const MyReviewPage = () => {
         </div>
       )}
 
-      {/* Modal for editing review */}
       {editingReview && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-xl p-6 w-96 relative shadow-lg">

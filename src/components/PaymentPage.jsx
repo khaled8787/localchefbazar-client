@@ -6,10 +6,8 @@ import Swal from "sweetalert2";
 import { AuthContext } from "../AuthContext";
 import useAxiosPublic from "../AxiosSecure";
 
-// Load Stripe
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PK);
 
-// ---------------- PAYMENT FORM COMPONENT ----------------
 const CheckoutForm = ({ order }) => {
   const stripe = useStripe();
   const elements = useElements();
@@ -20,7 +18,6 @@ const CheckoutForm = ({ order }) => {
   const [clientSecret, setClientSecret] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // Create Payment Intent
   useEffect(() => {
     if (order?.price) {
       axiosSecure
@@ -60,7 +57,6 @@ const CheckoutForm = ({ order }) => {
     }
 
     if (paymentIntent.status === "succeeded") {
-      // Save Payment History
       const paymentData = {
         orderId: order._id,
         userEmail: user?.email,
@@ -71,7 +67,6 @@ const CheckoutForm = ({ order }) => {
 
       await axiosSecure.post("/payments", paymentData);
 
-      // Update Order Status
       await axiosSecure.patch(`/orders/${order._id}/pay`, {
         paymentStatus: "paid",
       });
@@ -100,7 +95,6 @@ const CheckoutForm = ({ order }) => {
   );
 };
 
-// ---------------- PAYMENT PAGE WRAPPER ----------------
 const PaymentPage = () => {
   const { id } = useParams();
   const axiosSecure = useAxiosPublic();

@@ -13,7 +13,6 @@ const OrderPage = () => {
   const [quantity, setQuantity] = useState(1);
   const [address, setAddress] = useState("");
 
-  // Fetch the meal data
   const { data: meal, isLoading } = useQuery({
     queryKey: ["meal", mealId],
     queryFn: async () => {
@@ -24,7 +23,6 @@ const OrderPage = () => {
 
   if (isLoading) return <div className="text-center py-10">Loading...</div>;
 
-  // ===== ORDER HANDLER =====
   const handleOrder = async () => {
     if (!address.trim()) {
       return Swal.fire("Error", "Please enter your delivery address.", "error");
@@ -32,7 +30,6 @@ const OrderPage = () => {
 
     const totalPrice = meal.price * quantity;
 
-    // SweetAlert confirmation
     const result = await Swal.fire({
       title: "Confirm Your Order",
       html: `
@@ -48,7 +45,6 @@ const OrderPage = () => {
 
     if (!result.isConfirmed) return;
 
-    // Prepare order data for MongoDB
     const orderData = {
       foodId: meal._id,
       mealName: meal.foodName,
@@ -81,7 +77,6 @@ const OrderPage = () => {
     <div className="max-w-3xl mx-auto mt-10 p-6 bg-white shadow-xl rounded-2xl border border-gray-100">
       <h2 className="text-3xl font-bold mb-6 text-center">Confirm Your Order</h2>
 
-      {/* Meal Info Card */}
       <div className="flex flex-col md:flex-row gap-6">
         <img
           src={meal.foodImage}
@@ -97,9 +92,7 @@ const OrderPage = () => {
         </div>
       </div>
 
-      {/* Form */}
       <div className="mt-6 space-y-4">
-        {/* Quantity */}
         <div>
           <label className="font-semibold">Quantity</label>
           <input
@@ -111,7 +104,6 @@ const OrderPage = () => {
           />
         </div>
 
-        {/* Address */}
         <div>
           <label className="font-semibold">Delivery Address</label>
           <textarea
@@ -123,7 +115,6 @@ const OrderPage = () => {
           />
         </div>
 
-        {/* Total Price */}
         <p className="text-xl font-bold text-orange-600">
           Total Price: ${meal.price * quantity}
         </p>
