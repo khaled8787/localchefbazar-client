@@ -17,9 +17,22 @@ const MealDetailsModal = ({ meal, close }) => {
   const [reviews, setReviews] = useState([]);
 
   useEffect(() => {
-    axiosSecure.get(`/reviews?foodId=${meal._id}`).then(res => {
-      setReviews(res.data);
-    });
+    if (user) {
+      setReviewerName(user.displayName || "");
+      setReviewerImage(
+        user.photoURL || "https://i.ibb.co/2Yf6s0b/default-avatar.png"
+      );
+    }
+  }, [user]);
+
+  useEffect(() => {
+    if (!meal?._id) return;
+
+    axiosSecure
+      .get(`/reviews/by-meal?mealId=${meal._id}`)
+      .then(res => {
+        setReviews(res.data);
+      });
   }, [meal._id, axiosSecure]);
 
   const handleSubmitReview = async () => {

@@ -18,35 +18,21 @@ const LoginPage = () => {
   } = useForm();
 
   const onSubmit = async (data) => {
-  const { email, password } = data;
-  setLoading(true);
+    const { email, password } = data;
+    setLoading(true);
 
-  try {
-    // Firebase login
-    const userCredential = await signInUser(email, password);
-    const user = userCredential.user;
+    try {
+      const userCredential = await signInUser(email, password);
+      const user = userCredential.user;
 
-    // 🔹 Server থেকে JWT fetch
-    const response = await fetch(`${import.meta.env.VITE_SERVER_URL}/jwt`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email: user.email }),
-    });
-
-    const { token } = await response.json();
-    localStorage.setItem("token", token);  // 🔹 JWT save
-
-    console.log("JWT token after login:", localStorage.getItem("token")); // debug
-
-    toast.success("Login successful!");
-    navigate(from, { replace: true });
-  } catch (error) {
-    toast.error(error.message);
-  } finally {
-    setLoading(false);
-  }
-};
-
+      toast.success("Login successful!");
+      navigate(from, { replace: true });
+    } catch (error) {
+      toast.error(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen flex justify-center items-center bg-gray-50">

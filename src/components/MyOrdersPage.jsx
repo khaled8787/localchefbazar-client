@@ -7,15 +7,17 @@ import useAxiosPublic from "../AxiosSecure";
 
 const MyOrdersPage = () => {
   const { user } = useContext(AuthContext);
-  const axiosSecure = useAxiosPublic();
+  const axiosPublic = useAxiosPublic();
   const navigate = useNavigate();
 
   const { data: orders = [], isLoading, refetch } = useQuery({
     queryKey: ["myOrders", user?.email],
     queryFn: async () => {
-      const res = await axiosSecure.get(`/orders/user/${user?.email}`);
+      if (!user?.email) return [];
+      const res = await axiosPublic.get(`/orders/user/${user.email}`);
       return res.data;
     },
+    enabled: !!user?.email,
   });
 
   if (isLoading)
@@ -28,7 +30,7 @@ const MyOrdersPage = () => {
 
   const handlePay = async (order) => {
     try {
-      const res = await axiosSecure.post("/create-payment-intent", {
+      const res = await axiosPublic.post("/create-payment-intent", {
         price: order.price,
         orderId: order._id,
         userEmail: user.email,
@@ -45,7 +47,7 @@ const MyOrdersPage = () => {
         state: { clientSecret, orderId: order._id },
       });
     } catch (error) {
-      console.log(error)
+      console.log(error);
       Swal.fire("Error", "Payment redirect failed!", "error");
     }
   };
@@ -75,41 +77,45 @@ const MyOrdersPage = () => {
               className="bg-white border rounded-2xl shadow-lg hover:shadow-2xl transition p-6"
             >
               <h3 className="text-2xl font-semibold text-orange-500 mb-3">
-                {order.mealName}
+                {order.mealName || order.items?.[0]?.name || "Meal Name"}
               </h3>
 
               <div className="space-y-2 text-gray-700">
                 <p>
-                  <b>Food Name:</b> {order.mealName}
+                  <b>Food Name:</b> {order.mealName || order.items?.[0]?.name}
                 </p>
                 <p>
-                  <b>Order Status:</b> {order.orderStatus}
+                  <b>Order Status:</b> {order.orderStatus || "pending"}
                 </p>
                 <p>
-                  <b>Price:</b> ${order.price}
+                  <b>Price:</b> ${order.price || order.totalPrice}
                 </p>
                 <p>
-                  <b>Quantity:</b> {order.quantity}
+                  <b>Quantity:</b> {order.quantity || order.items?.length || 1}
                 </p>
                 <p>
-                  <b>Delivery Time:</b> {new Date(order.orderTime).toLocaleString()}
+                  <b>Delivery Time:</b>{" "}
+                  {new Date(order.orderTime || order.createdAt).toLocaleString()}
                 </p>
                 <p>
-                  <b>Chef ID:</b> {order.chefId}
+                  <b>Chef ID:</b> {order.chefId || "N/A"}
                 </p>
                 <p>
                   <b>Payment Status:</b>{" "}
                   <span
                     className={`px-2 py-1 rounded text-white ${
-                      order.paymentStatus === "paid" ? "bg-green-600" : "bg-red-500"
+                      (order.paymentStatus || "unpaid") === "paid"
+                        ? "bg-green-600"
+                        : "bg-red-500"
                     }`}
                   >
-                    {order.paymentStatus}
+                    {order.paymentStatus || "unpaid"}
                   </span>
                 </p>
               </div>
 
-              {order.orderStatus === "accepted" && order.paymentStatus === "Pending" && (
+              {(order.orderStatus === "accepted" &&
+                (order.paymentStatus || "unpaid") !== "paid") && (
                 <div className="mt-5">
                   <button
                     onClick={() => handlePay(order)}

@@ -1,96 +1,113 @@
-import React, { useEffect, useState } from 'react';
-import { AuthContext } from './AuthContext';
-import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut, updateProfile } from 'firebase/auth';
-import { auth } from './firebase.init';
-import axios from 'axios';
+import React, { useEffect, useState } from "react";
+import { AuthContext } from "./AuthContext";
+import {
+  createUserWithEmailAndPassword,
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  signOut,
+  updateProfile,
+} from "firebase/auth";
+import { auth } from "./firebase.init";
+import axios from "axios";
 
 const AuthProvider = ({ children }) => {
-
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const saveUserToDB = async (user) => {
+  const serverURL = import.meta.env.VITE_SERVER_URL;
+
+  const saveUserToDB = async (firebaseUser) => {
     try {
-      await axios.post(`${import.meta.env.VITE_SERVER_URL}/users`, {
-        name: user.displayName || "No Name",
-        email: user.email,
-        role: 'user' 
+      await axios.post(`${serverURL}/users`, {
+        name: firebaseUser.displayName || "No Name",
+        email: firebaseUser.email,
+        role: "user",
       });
     } catch (err) {
       console.error("Failed to save user:", err);
     }
   };
 
-  const getJWT = async (email) => {
-    try {
-      const res = await axios.post(`${import.meta.env.VITE_SERVER_URL}/jwt`, { email });
-      localStorage.setItem("token", res.data.token);
-    } catch (err) {
-      console.error("JWT fetch failed:", err);
-      localStorage.removeItem("token");
-    }
-  };
-
   const registerUser = async (email, password) => {
     setLoading(true);
-    const result = await createUserWithEmailAndPassword(auth, email, password);
-
-    await saveUserToDB(result.user);
-    await getJWT(result.user.email);
-
-    return result;
+    try {
+      const result = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      await saveUserToDB(result.user);
+      return result;
+    } finally {
+      setLoading(false);
+    }
   };
 
   const signInUser = async (email, password) => {
     setLoading(true);
-    const result = await signInWithEmailAndPassword(auth, email, password);
-
-    await getJWT(email);
-    return result;
+    try {
+      const result = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      return result;
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const logOut = () => {
+  const logOut = async () => {
     setLoading(true);
-    localStorage.removeItem("token");
-    return signOut(auth);
+    try {
+      await signOut(auth);
+      setUser(null);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const updateUserProfile = (profile) => {
     return updateProfile(auth.currentUser, profile);
   };
 
-  const fetchUserRole = async (email) => {
-    try {
-      const res = await axios.get(`${import.meta.env.VITE_SERVER_URL}/users/${email}`);
-          console.log("🔥 ROLE API RESPONSE:", res.data);
-      return res.data; 
-    } catch (err) {
-      console.log("Role fetch failed");
-      return null;
-    }
-  };
-
   useEffect(() => {
     const unSubscribe = onAuthStateChanged(auth, async (currentUser) => {
-      if (currentUser) {
-        const roleInfo = await fetchUserRole(currentUser.email);
-        console.log("🔥 ROLE API RESPONSE:", roleInfo);
+      setLoading(true);
+
+      if (!currentUser?.email) {
+        setUser(null);
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const res = await axios.get(
+          `${serverURL}/users/${currentUser.email}`
+        );
 
         setUser({
           email: currentUser.email,
           displayName: currentUser.displayName,
           photoURL: currentUser.photoURL,
-          role: roleInfo?.role 
+          role: res.data?.role || "user",
         });
-      } else {
-        setUser(null);
-      }
+      } catch (error) {
+        console.error("Failed to fetch user info:", error);
 
-      setLoading(false);
+        setUser({
+          email: currentUser.email,
+          displayName: currentUser.displayName,
+          photoURL: currentUser.photoURL,
+          role: "user",
+        });
+      } finally {
+        setLoading(false);
+      }
     });
 
     return () => unSubscribe();
-  }, []);
+  }, [serverURL]);
 
   const authInfo = {
     user,
@@ -98,7 +115,7 @@ const AuthProvider = ({ children }) => {
     registerUser,
     signInUser,
     logOut,
-    updateUserProfile
+    updateUserProfile,
   };
 
   return (

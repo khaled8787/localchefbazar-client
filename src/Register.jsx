@@ -48,7 +48,7 @@ const RegisterPage = () => {
       });
 
       toast.success("Registration successful!");
-      navigate("/login"); 
+      navigate("/"); 
     } catch (error) {
       toast.error(error.message);
     } finally {

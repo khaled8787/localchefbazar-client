@@ -10,30 +10,33 @@ const Profile = () => {
 
   useEffect(() => {
     const fetchUser = async () => {
-      if (user?.email) {
-        try {
-          const res = await axios.get(
-            `${import.meta.env.VITE_SERVER_URL}/users/${user.email}`
-          );
-          setUserData(res.data);
-        } catch (err) {
-          console.error("Failed to fetch user data:", err);
-          toast.error("Failed to load user data");
-        }
+      if (!user?.email) return; 
+
+      try {
+        const res = await axios.get(
+          `${import.meta.env.VITE_SERVER_URL}/users/${user.email}`
+        );
+        setUserData(res.data);
+      } catch (err) {
+        console.error("Failed to fetch user data:", err);
+        toast.error("Failed to load user data");
       }
     };
-    fetchUser();
-  }, [user]);
+
+    if (!loading && user?.email) {
+      fetchUser();
+    }
+  }, [user, loading]);
 
   const sendRequest = async (type) => {
     if (!userData) return;
     setUpdating(true);
     try {
       const payload = {
-        _id: userData._id,
+        userId: userData._id,
         userName: userData.name,
         userEmail: userData.email,
-        requestType: type, 
+        requestType: type,
         requestStatus: "pending",
         requestTime: new Date().toISOString(),
       };
@@ -51,8 +54,9 @@ const Profile = () => {
     } catch (err) {
       console.error(err);
       toast.error("Failed to send request");
+    } finally {
+      setUpdating(false);
     }
-    setUpdating(false);
   };
 
   if (loading || !userData) {

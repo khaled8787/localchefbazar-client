@@ -27,47 +27,51 @@ const CreateMeal = () => {
   const removeIngredient = (index) => setIngredients(ingredients.filter((_, i) => i !== index));
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!user) return toast.error("User not found!");
+  e.preventDefault();
 
-    setSubmitting(true);
+  if (!user?.email) {
+    return toast.error("User not logged in!");
+  }
 
-    try {
-      const mealData = {
-        foodName,
-        chefName: user.displayName,
-        foodImage,
-        price: parseFloat(price),
-        rating: parseFloat(rating),
-        ingredients: ingredients.filter((i) => i.trim() !== ""),
-        estimatedDeliveryTime,
-        chefExperience,
-        deliveryArea,
-      };
+  setSubmitting(true);
 
-      const res = await axiosSecure.post("/meals", mealData);
-      console.log("Server response:", res.data);
+  try {
+    const mealData = {
+      foodName,
+      chefName: user.displayName,
+      chefEmail: user.email, 
+      foodImage,
+      price: parseFloat(price),
+      rating: parseFloat(rating),
+      ingredients: ingredients.filter((i) => i.trim() !== ""),
+      estimatedDeliveryTime,
+      chefExperience,
+      deliveryArea,
+    };
 
-      if (res.data.result?.insertedId) {
-        toast.success("Meal created successfully!");
-        setFoodName("");
-        setFoodImage("");
-        setPrice("");
-        setRating(0);
-        setIngredients([""]);
-        setEstimatedDeliveryTime("");
-        setChefExperience("");
-        setDeliveryArea("");
-      } else {
-        toast.error("Failed to create meal. Server returned no insertedId.");
-      }
-    } catch (err) {
-      console.error("Create meal error:", err);
-      toast.error(err.response?.data?.message || "Failed to create meal.");
+    const res = await axiosSecure.post("/meals", mealData);
+
+    if (res.data.success || res.data.result?.insertedId) {
+      toast.success("Meal created successfully!");
+      setFoodName("");
+      setFoodImage("");
+      setPrice("");
+      setRating(0);
+      setIngredients([""]);
+      setEstimatedDeliveryTime("");
+      setChefExperience("");
+      setDeliveryArea("");
+    } else {
+      toast.error("Failed to create meal.");
     }
-
+  } catch (err) {
+    console.error("Create meal error:", err);
+    toast.error(err.response?.data?.message || "Failed to create meal.");
+  } finally {
     setSubmitting(false);
-  };
+  }
+};
+
 
   return (
     <div className="max-w-4xl mx-auto p-6">
