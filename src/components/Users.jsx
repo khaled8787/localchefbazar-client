@@ -16,14 +16,68 @@ const Users = () => {
   });
 
   const handleMakeAdmin = async (id) => {
-    await axiosInstance.patch(`/users/admin/${id}`);
-    refetch();
-  };
+  try {
+    const res = await axiosInstance.patch(`/users/admin/${id}`);
+    
+    if (res.data.modifiedCount > 0) {
+      Swal.fire({
+        icon: "success",
+        title: "Success!",
+        text: "User has been made an Admin.",
+        timer: 2000,
+        showConfirmButton: false,
+      });
+      refetch();
+    } else {
+      Swal.fire({
+        icon: "info",
+        title: "Info",
+        text: "User is already an Admin.",
+        timer: 2000,
+        showConfirmButton: false,
+      });
+    }
+  } catch (error) {
+    Swal.fire({
+      icon: "error",
+      title: "Error!",
+      text: "Something went wrong. Please try again.",
+    });
+    console.error(error);
+  }
+};
 
-  const handleMakeChef = async (id) => {
-    await axiosInstance.put(`/users/chef/${id}`);
-    refetch();
-  };
+const handleMakeChef = async (id) => {
+  try {
+    const res = await axiosInstance.put(`/users/chef/${id}`);
+    
+    if (res.data.modifiedCount > 0) {
+      Swal.fire({
+        icon: "success",
+        title: "Success!",
+        text: "User has been made a Chef.",
+        timer: 2000,
+        showConfirmButton: false,
+      });
+      refetch();
+    } else {
+      Swal.fire({
+        icon: "info",
+        title: "Info",
+        text: "User is already a Chef.",
+        timer: 2000,
+        showConfirmButton: false,
+      });
+    }
+  } catch (error) {
+    Swal.fire({
+      icon: "error",
+      title: "Error!",
+      text: "Something went wrong. Please try again.",
+    });
+    console.error(error);
+  }
+};
 
   const handleMakeFraud = async (id) => {
     Swal.fire({

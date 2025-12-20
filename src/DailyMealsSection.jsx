@@ -7,12 +7,13 @@ const DailyMealsSection = () => {
   const axiosPublic = useAxiosPublic(); 
 
   const { data: meals = [], isLoading, error } = useQuery({
-    queryKey: ["daily-meals"],
-    queryFn: async () => {
-      const res = await axiosPublic.get("/meals"); 
-      return res.data;
-    },
-  });
+  queryKey: ["daily-meals"],
+  queryFn: async () => {
+    const res = await axiosPublic.get("/meals"); 
+    return res.data.meals || [];
+  },
+});
+
 
   if (isLoading)
     return <div className="text-center py-10">Loading daily meals...</div>;
