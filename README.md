@@ -68,3 +68,11 @@ LocalChefBazar একটি full-stack MERN-based web application যেখা�
 ## Environment Variables
 
 ### Backend (.env)
+
+
+## How to Run Locally
+1. git clone https://github.com/khaled8787/localchefbazar.git
+2. cd localchefbazar-client
+3. npm install
+4. npm start / npm run dev
+
