@@ -1,20 +1,78 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-import { auth } from "./firebase.init"; 
+import { auth } from "./firebase.init";
 import { toast } from "react-hot-toast";
 import { Link, useNavigate } from "react-router";
+import { motion, useMotionValue, useSpring } from "framer-motion";
 
 const RegisterPage = () => {
-  const {
-    register,
-    handleSubmit,
-    watch,
-    formState: { errors },
-  } = useForm();
-
-  const [loading, setLoading] = useState(false);
+  const { register, handleSubmit } = useForm();
   const navigate = useNavigate();
+  const faceRef = useRef(null);
+
+  // Eye movement
+  const eyeX = useMotionValue(0);
+  const eyeY = useMotionValue(0);
+  const smoothX = useSpring(eyeX, { stiffness: 120, damping: 15 });
+  const smoothY = useSpring(eyeY, { stiffness: 120, damping: 15 });
+
+  // Eye blink state
+  const [blink, setBlink] = useState(false);
+
+  // Mouth smile state
+  const [smile, setSmile] = useState(false);
+
+  // Password focus
+  const [hideEyes, setHideEyes] = useState(false);
+
+  // NATURAL RANDOM BLINK
+  useEffect(() => {
+  let blinkTimeout;
+
+  const startBlinkCycle = () => {
+    // Random interval between 3-7s
+    const interval = Math.random() * 4000 + 3000;
+    blinkTimeout = setTimeout(() => {
+      setBlink(true); // blink on
+      const duration = Math.random() * 100 + 150; // 0.15-0.25s
+      setTimeout(() => setBlink(false), duration);
+      startBlinkCycle();
+    }, interval);
+  };
+
+  // 1 second delay before first blink
+  const initialDelay = setTimeout(startBlinkCycle, 1000);
+
+  return () => {
+    clearTimeout(blinkTimeout);
+    clearTimeout(initialDelay);
+  };
+}, []);
+
+
+  const lookAt = (e) => {
+    if (!faceRef.current) return;
+
+    const face = faceRef.current.getBoundingClientRect();
+    const input = e.target.getBoundingClientRect();
+
+    const dx = input.left + input.width / 2 - (face.left + face.width / 2);
+    const dy = input.top + input.height / 2 - (face.top + face.height / 2);
+
+    eyeX.set(Math.max(Math.min(dx / 15, 12), -12));
+    eyeY.set(Math.max(Math.min(dy / 15, 12), -12));
+
+    setSmile(true);
+    if (e.target.type === "password") setHideEyes(true);
+  };
+
+  const resetLook = () => {
+    eyeX.set(0);
+    eyeY.set(0);
+    setSmile(false);
+    setHideEyes(false);
+  };
 
   const onSubmit = async (data) => {
     const { name, email, password, confirmPassword, address, photoURL } = data;
@@ -24,12 +82,9 @@ const RegisterPage = () => {
       return;
     }
 
-    setLoading(true);
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      const user = userCredential.user;
-
-      await updateProfile(user, {
+      await updateProfile(userCredential.user, {
         displayName: name,
         photoURL: photoURL || "https://i.ibb.co/default-profile.png",
       });
@@ -48,99 +103,94 @@ const RegisterPage = () => {
       });
 
       toast.success("Registration successful!");
-      navigate("/"); 
+      navigate("/");
     } catch (error) {
       toast.error(error.message);
-    } finally {
-      setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex justify-center items-center bg-gray-50">
-      <div className="w-full max-w-md p-8 space-y-4 bg-white rounded shadow">
-        <h2 className="text-2xl font-bold text-center">Register</h2>
-        <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
-          <div>
-            <label className="block font-medium">Name</label>
-            <input
-              type="text"
-              placeholder="Your Name"
-              className="input input-bordered w-full"
-              {...register("name", { required: "Name is required" })}
-            />
-            {errors.name && <p className="text-red-500">{errors.name.message}</p>}
-          </div>
+    <div className="min-h-screen grid grid-cols-1 lg:grid-cols-2 bg-gradient-to-br from-slate-100 to-slate-200 dark:from-gray-900 dark:to-gray-800">
 
-          <div>
-            <label className="block font-medium">Email</label>
-            <input
-              type="email"
-              placeholder="Your Email"
-              className="input input-bordered w-full"
-              {...register("email", { required: "Email is required" })}
-            />
-            {errors.email && <p className="text-red-500">{errors.email.message}</p>}
-          </div>
+      {/* LEFT – FORM */}
+      <motion.div
+        initial={{ x: -60, opacity: 0 }}
+        animate={{ x: 0, opacity: 1 }}
+        className="flex items-center justify-center p-6"
+      >
+        <div className="w-full max-w-md bg-white dark:bg-gray-900 rounded-2xl shadow-xl p-8 space-y-5">
+          <h2 className="text-3xl font-bold text-center text-gray-800 dark:text-white">
+            Create Account
+          </h2>
 
-          <div>
-            <label className="block font-medium">Profile Image URL</label>
-            <input
-              type="text"
-              placeholder="Image URL"
-              className="input input-bordered w-full"
-              {...register("photoURL")}
-            />
-          </div>
+          <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
+            {[
+              { name: "name", placeholder: "Full Name" },
+              { name: "email", placeholder: "Email Address" },
+              { name: "photoURL", placeholder: "Profile Image URL" },
+              { name: "address", placeholder: "Address" },
+              { name: "password", placeholder: "Password", type: "password" },
+              { name: "confirmPassword", placeholder: "Confirm Password", type: "password" },
+            ].map((field, i) => (
+              <input
+                key={i}
+                type={field.type || "text"}
+                placeholder={field.placeholder}
+                className="w-full px-4 py-3 rounded-xl border focus:ring-2 focus:ring-blue-500"
+                {...register(field.name)}
+                onFocus={lookAt}
+                onBlur={resetLook}
+              />
+            ))}
 
-          <div>
-            <label className="block font-medium">Address</label>
-            <input
-              type="text"
-              placeholder="Your Address"
-              className="input input-bordered w-full"
-              {...register("address", { required: "Address is required" })}
-            />
-            {errors.address && <p className="text-red-500">{errors.address.message}</p>}
-          </div>
+            <button
+              type="submit"
+              className="w-full py-3 rounded-xl bg-blue-600 text-white font-semibold"
+            >
+              Register
+            </button>
+          </form>
 
-          <div>
-            <label className="block font-medium">Password</label>
-            <input
-              type="password"
-              placeholder="Password"
-              className="input input-bordered w-full"
-              {...register("password", { required: "Password is required", minLength: 6 })}
-            />
-            {errors.password && <p className="text-red-500">{errors.password.message}</p>}
-          </div>
+          <p className="text-center text-gray-500 text-sm">
+            Already have an account?{" "}
+            <Link to="/login" className="text-blue-600 font-medium">
+              Login
+            </Link>
+          </p>
+        </div>
+      </motion.div>
 
-          <div>
-            <label className="block font-medium">Confirm Password</label>
-            <input
-              type="password"
-              placeholder="Confirm Password"
-              className="input input-bordered w-full"
-              {...register("confirmPassword", { required: "Confirm your password" })}
-            />
-            {errors.confirmPassword && <p className="text-red-500">{errors.confirmPassword.message}</p>}
-          </div>
+      {/* RIGHT – INTERACTIVE CARTOON */}
+      <motion.div
+        initial={{ x: 60, opacity: 0 }}
+        animate={{ x: 0, opacity: 1 }}
+        className="hidden lg:flex items-center justify-center"
+      >
+        <div
+          ref={faceRef}
+          className="relative w-64 h-64 bg-yellow-200 rounded-full shadow-xl flex items-center justify-center"
+        >
+          {/* Eyes */}
+          {!hideEyes && (
+            <motion.div
+  style={{ x: smoothX, y: smoothY }}
+  initial={{ scaleY: 1 }}   // ✅ initial open
+  animate={{ scaleY: blink ? 0.1 : 1 }}
+  transition={{ duration: 0.15 }}
+  className="flex gap-6"
+>
+  <div className="w-6 h-6 bg-black rounded-full" />
+  <div className="w-6 h-6 bg-black rounded-full" />
+</motion.div>
 
-          <button
-            type="submit"
-            className={`btn btn-primary w-full ${loading ? "loading" : ""}`}
-            disabled={loading}
-          >
-            {loading ? "Registering..." : "Register"}
-          </button>
-        </form>
-         <p className="text-center text-gray-500">
-          Already have an account?{" "}
-          <Link to="/login" className="text-blue-600 hover:underline">
-            Login
-          </Link>
-        </p>
-      </div>
+          )}
+
+          {/* Mouth */}
+          <div
+            className={`absolute bottom-16 w-16 h-2 bg-black rounded-full transition-all duration-200 ${smile ? "scale-x-125 rotate-6" : "scale-x-100 rotate-0"}`}
+          />
+        </div>
+      </motion.div>
     </div>
   );
 };

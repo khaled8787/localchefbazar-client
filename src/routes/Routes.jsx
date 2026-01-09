@@ -22,6 +22,7 @@ import MyReviewPage from '../components/MyReviewPage';
 import FavoriteMealsPage from '../components/FavoriteMealsPage';
 import ManageRequests from '../components/ManageRequests';
 import PlatformStatistics from '../components/PlatformStatistics';
+import AboutPage from '../components/Navbar/AboutPage';
 
 
 
@@ -39,6 +40,10 @@ export const router = createBrowserRouter([
       {
         path: 'register',
         element: <RegisterPage></RegisterPage>
+      },
+      {
+       path: 'about',
+       element: <AboutPage></AboutPage>
       },
       {
         path: 'login',
