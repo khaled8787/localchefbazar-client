@@ -1,57 +1,107 @@
-import React from "react";
-import { FaFacebookF, FaInstagram, FaTwitter, FaLinkedinIn } from "react-icons/fa";
+import { motion } from "framer-motion";
+import {
+  FaFacebookF,
+  FaInstagram,
+  FaTwitter,
+  FaLinkedinIn,
+} from "react-icons/fa";
 
 const Footer = () => {
   return (
-    <footer className="bg-neutral text-neutral-content">
-      <div className="max-w-7xl mx-auto px-6 py-14 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
+    <footer className="relative bg-gradient-to-b from-gray-950 via-gray-900 to-gray-950 text-gray-300 overflow-hidden">
 
-        <div>
-          <h3 className="text-xl font-semibold mb-4">Contact Us</h3>
+      {/* Glow Background */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom,rgba(255,165,0,0.15),transparent_65%)]"></div>
+
+      <div className="relative max-w-7xl mx-auto px-6 py-20 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+
+        {/* Contact */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+        >
+          <h3 className="text-xl font-bold text-orange-400 mb-4">
+            Contact Us
+          </h3>
           <p className="text-sm mb-2">📍 Natore, Bangladesh</p>
-          <p className="text-sm mb-2">📞 +880 17XX-XXXXXX</p>
-          <p className="text-sm">✉️ support@localchefbazaar.com</p>
-        </div>
+          <p className="text-sm mb-2">📞 +880 1737878716</p>
+          <p className="text-sm">✉️ mdkhaledmahmud01737.com</p>
+        </motion.div>
 
-        <div>
-          <h3 className="text-xl font-semibold mb-4">Working Hours</h3>
+        {/* Working Hours */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7 }}
+        >
+          <h3 className="text-xl font-bold text-orange-400 mb-4">
+            Working Hours
+          </h3>
           <p className="text-sm mb-2">Saturday - Thursday</p>
           <p className="text-sm mb-2">⏰ 9:00 AM - 10:00 PM</p>
-          <p className="text-sm">Friday: Closed</p>
-        </div>
+          <p className="text-sm text-red-400">Friday: Closed</p>
+        </motion.div>
 
-        <div>
-          <h3 className="text-xl font-semibold mb-4">Quick Links</h3>
+        {/* Quick Links */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+        >
+          <h3 className="text-xl font-bold text-orange-400 mb-4">
+            Quick Links
+          </h3>
           <ul className="space-y-2 text-sm">
-            <li className="hover:underline cursor-pointer">About Us</li>
-            <li className="hover:underline cursor-pointer">Contact</li>
-            <li className="hover:underline cursor-pointer">Privacy Policy</li>
-            <li className="hover:underline cursor-pointer">Terms & Conditions</li>
+            {[
+              "About Us",
+              "Contact",
+              "Privacy Policy",
+              "Terms & Conditions",
+            ].map((item, i) => (
+              <li
+                key={i}
+                className="hover:text-orange-400 transition cursor-pointer"
+              >
+                {item}
+              </li>
+            ))}
           </ul>
-        </div>
+        </motion.div>
 
-        <div>
-          <h3 className="text-xl font-semibold mb-4">Follow Us</h3>
+        {/* Social */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.9 }}
+        >
+          <h3 className="text-xl font-bold text-orange-400 mb-4">
+            Follow Us
+          </h3>
           <div className="flex gap-4">
-            <a className="btn btn-circle btn-outline" href="#">
-              <FaFacebookF />
-            </a>
-            <a className="btn btn-circle btn-outline" href="#">
-              <FaInstagram />
-            </a>
-            <a className="btn btn-circle btn-outline" href="#">
-              <FaTwitter />
-            </a>
-            <a className="btn btn-circle btn-outline" href="#">
-              <FaLinkedinIn />
-            </a>
+            {[FaFacebookF, FaInstagram, FaTwitter, FaLinkedinIn].map(
+              (Icon, i) => (
+                <motion.a
+                  key={i}
+                  whileHover={{ scale: 1.15 }}
+                  className="w-11 h-11 flex items-center justify-center rounded-full border border-gray-700 hover:border-orange-500 hover:text-orange-400 transition"
+                  href="#"
+                >
+                  <Icon />
+                </motion.a>
+              )
+            )}
           </div>
-        </div>
-
+        </motion.div>
       </div>
 
-      <div className="border-t border-neutral-content/20 py-4 text-center text-sm">
-        © {new Date().getFullYear()} LocalChefBazaar. All Rights Reserved.
+      {/* Bottom */}
+      <div className="relative border-t border-gray-700 py-5 text-center text-sm text-gray-400">
+        © {new Date().getFullYear()}{" "}
+        <span className="text-orange-400 font-semibold">
+          LocalChefBazaar
+        </span>
+        . All Rights Reserved.
       </div>
     </footer>
   );

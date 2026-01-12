@@ -1,129 +1,121 @@
 import { motion } from "framer-motion";
 import { Star } from "react-feather";
 import { Swiper, SwiperSlide } from "swiper/react";
+import { useQuery } from "@tanstack/react-query";
+import useAxiosPublic from "./AxiosSecure";
 import "swiper/css";
 
-const chefsData = [
-  {
-    id: 1,
-    name: "Chef Ayesha",
-    expertise: "Italian Cuisine",
-    rating: 4.8,
-    experience: 5,
-    image: "https://media.istockphoto.com/id/1481454325/photo/portrait-of-indian-women-chef-standing-isolated-over-gray-background.jpg?b=1&s=612x612&w=0&k=20&c=z8d7UpyQzYZ7lrDz3pRHiF9gpj4VRKyts8JYnKWorAA=",
-  },
-  {
-    id: 2,
-    name: "Chef Rahim",
-    expertise: "Bangladeshi Cuisine",
-    rating: 4.9,
-    experience: 7,
-    image: "https://images.pexels.com/photos/29488811/pexels-photo-29488811.jpeg",
-  },
-  {
-    id: 3,
-    name: "Chef Sumi",
-    expertise: "Desserts & Bakery",
-    rating: 4.7,
-    experience: 4,
-    image: "https://media.istockphoto.com/id/1157398335/photo/latin-chef-smiling-pointing-at-the-left-side-of-her-filipina-on-pink-background.jpg?b=1&s=612x612&w=0&k=20&c=HtsRnoofcuET3-kq33gxRKkaHKHEoMCEW_LgC24o4RQ=",
-  },
-  {
-    id: 4,
-    name: "Chef Tanvir",
-    expertise: "Fast Food",
-    rating: 4.6,
-    experience: 6,
-    image: "https://images.pexels.com/photos/9986235/pexels-photo-9986235.jpeg",
-  },
-  {
-    id: 5,
-    name: "Chef Nabila",
-    expertise: "Healthy Meals",
-    rating: 4.8,
-    experience: 5,
-    image: "https://media.istockphoto.com/id/1486376269/photo/portrait-of-happy-indian-housewife-in-kitchen-holding-kitchen-cooking-accessories.jpg?b=1&s=612x612&w=0&k=20&c=AQDndnENoTeKpVhlE3o4Hp7I-rsewFSMfij6gHLgL0Y=",
-  },
-  {
-    id: 6,
-    name: "Chef Arif",
-    expertise: "Seafood Specialties",
-    rating: 4.7,
-    experience: 8,
-    image: "https://images.pexels.com/photos/4253292/pexels-photo-4253292.jpeg",
-  },
-];
-
 const ChefsSection = () => {
+  const axiosPublic = useAxiosPublic();
+
+  const { data: chefs = [], isLoading } = useQuery({
+    queryKey: ["home-chefs"],
+    queryFn: async () => {
+      const res = await axiosPublic.get("/users?role=chef");
+      return res.data.slice(0, 6); // শুধু 6 জন chef
+    },
+  });
+
+  if (isLoading) {
+    return (
+      <div className="py-20 text-center text-gray-400">
+        Loading chefs...
+      </div>
+    );
+  }
+
   return (
-    <div className="py-20 bg-gradient-to-b from-white to-orange-50">
+    <section className="relative py-28 bg-gradient-to-b from-gray-950 via-gray-900 to-gray-950 overflow-hidden">
+
+      {/* Glow background */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,165,0,0.18),transparent_60%)]"></div>
+
+      {/* Heading */}
       <motion.h2
-        initial={{ opacity: 0, y: -20 }}
+        initial={{ opacity: 0, y: -30 }}
         whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        className="text-4xl font-bold text-center mb-10"
+        transition={{ duration: 0.7 }}
+        className="relative text-4xl md:text-5xl font-extrabold text-center mb-16 text-orange-400 drop-shadow-[0_0_25px_rgba(255,165,0,0.9)]"
       >
-        🍽️ Explore Our <span className="text-orange-600">Top Chefs</span>
+        🍽️ Explore Our <span className="text-white">Top Chefs</span>
       </motion.h2>
 
-      <div className=" grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-10">
-        {chefsData.map((chef) => (
+      {/* Desktop Grid */}
+      <div className="hidden md:grid grid-cols-2 lg:grid-cols-3 gap-10 px-10 max-w-7xl mx-auto relative">
+        {chefs.map((chef) => (
           <motion.div
-            key={chef.id}
-            whileHover={{ scale: 1.05 }}
-            transition={{ type: "spring", stiffness: 200 }}
-            className="bg-white shadow-xl rounded-2xl p-5 border border-orange-100 hover:shadow-2xl"
+            key={chef._id}
+            whileHover={{ scale: 1.06, rotateX: 6, rotateY: -6 }}
+            transition={{ type: "spring", stiffness: 180 }}
+            className="bg-gray-900 rounded-3xl p-5 border border-gray-700 shadow-[0_25px_70px_rgba(0,0,0,0.85)] hover:shadow-orange-500/30"
           >
             <img
-              src={chef.image}
-              className="w-full h-60 object-cover rounded-xl"
+              src={chef.photo}
               alt={chef.name}
+              className="w-full h-60 object-cover rounded-2xl"
             />
-            <h3 className="text-xl font-semibold mt-4">{chef.name}</h3>
-            <p className="text-sm text-gray-600">{chef.expertise}</p>
 
-            <div className="flex items-center gap-1 text-orange-500 mt-2">
-              <Star size={18} />
-              <span className="font-semibold">{chef.rating}</span>
+            <h3 className="text-xl font-semibold mt-4 text-gray-200">
+              {chef.name}
+            </h3>
+
+            <p className="text-sm text-gray-400">
+              {chef.specialty || "Professional Home Chef"}
+            </p>
+
+            <div className="flex items-center gap-2 mt-2 text-orange-400">
+              <Star size={18} className="fill-orange-400" />
+              <span className="font-semibold">
+                {chef.rating || "4.8"}
+              </span>
             </div>
 
             <p className="text-gray-500 mt-1 text-sm">
-              Experience: {chef.experience} years
+              Experience: {chef.experience || "5"} years
             </p>
 
-            <button className="btn btn-sm bg-orange-600 text-white w-full mt-4 hover:bg-orange-700">
+            <button className="mt-4 w-full py-2 rounded-xl bg-orange-600 text-white font-semibold hover:bg-orange-700 transition">
               View Meals
             </button>
           </motion.div>
         ))}
       </div>
 
-      <div className="md:hidden px-6">
+      {/* Mobile Swiper */}
+      <div className="md:hidden px-6 relative">
         <Swiper spaceBetween={20} slidesPerView={1.2}>
-          {chefsData.map((chef) => (
-            <SwiperSlide key={chef.id}>
+          {chefs.map((chef) => (
+            <SwiperSlide key={chef._id}>
               <motion.div
                 whileHover={{ scale: 1.04 }}
-                className="bg-white shadow-xl rounded-2xl p-5 border border-orange-100"
+                className="bg-gray-900 rounded-3xl p-5 border border-gray-700 shadow-xl"
               >
                 <img
-                  src={chef.image}
-                  className="w-full h-52 object-cover rounded-xl"
+                  src={chef.photo}
                   alt={chef.name}
+                  className="w-full h-52 object-cover rounded-2xl"
                 />
-                <h3 className="text-xl font-semibold mt-4">{chef.name}</h3>
-                <p className="text-sm text-gray-600">{chef.expertise}</p>
 
-                <div className="flex items-center gap-1 text-orange-500 mt-2">
-                  <Star size={18} />
-                  <span className="font-semibold">{chef.rating}</span>
+                <h3 className="text-xl font-semibold mt-4 text-gray-200">
+                  {chef.name}
+                </h3>
+
+                <p className="text-sm text-gray-400">
+                  {chef.specialty || "Professional Home Chef"}
+                </p>
+
+                <div className="flex items-center gap-2 mt-2 text-orange-400">
+                  <Star size={18} className="fill-orange-400" />
+                  <span className="font-semibold">
+                    {chef.rating || "4.8"}
+                  </span>
                 </div>
 
                 <p className="text-gray-500 mt-1 text-sm">
-                  Experience: {chef.experience} years
+                  Experience: {chef.experience || "5"} years
                 </p>
 
-                <button className="btn btn-sm bg-orange-600 text-white w-full mt-4 hover:bg-orange-700">
+                <button className="mt-4 w-full py-2 rounded-xl bg-orange-600 text-white font-semibold hover:bg-orange-700 transition">
                   View Meals
                 </button>
               </motion.div>
@@ -131,7 +123,7 @@ const ChefsSection = () => {
           ))}
         </Swiper>
       </div>
-    </div>
+    </section>
   );
 };
 

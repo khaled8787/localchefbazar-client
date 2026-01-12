@@ -22,9 +22,7 @@ const CheckoutForm = ({ order }) => {
     if (order?.price) {
       axiosSecure
         .post("/create-payment-intent", { price: order.price })
-        .then((res) => {
-          setClientSecret(res.data.clientSecret);
-        });
+        .then((res) => setClientSecret(res.data.clientSecret));
     }
   }, [order, axiosSecure]);
 
@@ -37,18 +35,15 @@ const CheckoutForm = ({ order }) => {
     const card = elements.getElement(CardElement);
     if (!card) return;
 
-    const { error, paymentIntent } = await stripe.confirmCardPayment(
-      clientSecret,
-      {
-        payment_method: {
-          card,
-          billing_details: {
-            email: user?.email,
-            name: user?.displayName,
-          },
+    const { error, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
+      payment_method: {
+        card,
+        billing_details: {
+          email: user?.email,
+          name: user?.displayName,
         },
-      }
-    );
+      },
+    });
 
     if (error) {
       Swal.fire("Error", error.message, "error");
@@ -67,9 +62,7 @@ const CheckoutForm = ({ order }) => {
 
       await axiosSecure.post("/payments", paymentData);
 
-      await axiosSecure.patch(`/orders/${order._id}/pay`, {
-        paymentStatus: "paid",
-      });
+      await axiosSecure.patch(`/orders/${order._id}/pay`, { paymentStatus: "paid" });
 
       Swal.fire("Success", "Payment completed!", "success");
       navigate(`/payment-success?transactionId=${paymentIntent.id}`);
@@ -81,13 +74,29 @@ const CheckoutForm = ({ order }) => {
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-white p-6 rounded-2xl shadow-xl space-y-4"
+      className="bg-white p-6 rounded-2xl shadow-xl space-y-5 max-w-md mx-auto"
     >
-      <CardElement className="p-4 border rounded-xl" />
+      <h3 className="text-2xl font-bold text-orange-500 text-center mb-4">
+        Pay for {order.mealName}
+      </h3>
+
+      <CardElement
+        options={{
+          style: {
+            base: {
+              fontSize: "16px",
+              color: "#333",
+              "::placeholder": { color: "#a1a1aa" },
+            },
+            invalid: { color: "#f87171" },
+          },
+        }}
+        className="p-4 border rounded-xl bg-gray-50"
+      />
 
       <button
         disabled={!stripe || !clientSecret || loading}
-        className="btn w-full bg-orange-500 hover:bg-orange-600 text-white rounded-xl mt-3"
+        className="btn w-full bg-orange-500 hover:bg-orange-600 text-white rounded-xl py-3 font-semibold"
       >
         {loading ? "Processing..." : `Pay $${order.price}`}
       </button>
@@ -105,11 +114,15 @@ const PaymentPage = () => {
   }, [id, axiosSecure]);
 
   if (!order)
-    return <div className="text-center py-20 text-xl">Loading payment...</div>;
+    return (
+      <div className="flex justify-center items-center min-h-[60vh] text-orange-500 text-xl">
+        Loading payment...
+      </div>
+    );
 
   return (
-    <div className="max-w-3xl mx-auto mt-10 p-6">
-      <h2 className="text-4xl font-bold text-center text-orange-600 mb-8">
+    <div className="min-h-screen bg-orange-50 flex flex-col items-center px-4 py-10">
+      <h2 className="text-4xl md:text-5xl font-bold text-orange-600 mb-10 text-center">
         Complete Your Payment
       </h2>
 

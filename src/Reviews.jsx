@@ -15,42 +15,66 @@ const HomeReviewsSection = () => {
   });
 
   if (isLoading)
-    return <div className="text-center py-10">Loading reviews...</div>;
+    return (
+      <div className="text-center py-20 text-gray-300">
+        Loading reviews...
+      </div>
+    );
 
   return (
-    <section className="py-20 bg-white">
+    <section className="relative py-28 bg-gradient-to-b from-gray-950 via-gray-900 to-gray-950 overflow-hidden">
+
+      {/* Glow background */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,165,0,0.15),transparent_60%)]"></div>
+
+      {/* Heading */}
       <motion.h2
-        initial={{ opacity: 0, y: -20 }}
+        initial={{ opacity: 0, y: -30 }}
         whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        className="text-4xl font-bold text-center mb-12"
+        transition={{ duration: 0.7 }}
+        className="relative text-4xl md:text-5xl font-extrabold text-center mb-16 text-orange-400 drop-shadow-[0_0_25px_rgba(255,165,0,0.8)]"
       >
-        ⭐ Customer <span className="text-orange-600">Reviews</span>
+        ⭐ Customer <span className="text-white">Reviews</span>
       </motion.h2>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 px-6 md:px-12">
-        {reviews.map((rev) => (
+      {/* Reviews Grid */}
+      <div className="relative grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 px-6 md:px-12 max-w-7xl mx-auto">
+        {reviews.slice(0, 6).map((rev) => (
           <motion.div
             key={rev._id}
-            whileHover={{ scale: 1.05 }}
-            className="p-6 shadow-xl bg-gray-50 border border-orange-100 rounded-2xl"
+            whileHover={{ scale: 1.06, rotateX: 6, rotateY: -6 }}
+            transition={{ type: "spring", stiffness: 180 }}
+            className="bg-gray-900 rounded-3xl p-6 border border-gray-700 shadow-[0_25px_70px_rgba(0,0,0,0.85)] hover:shadow-orange-500/30"
           >
+            {/* User Info */}
             <div className="flex items-center gap-4 mb-4">
               <img
                 src={rev.reviewerImage}
-                className="w-12 h-12 object-cover rounded-full"
+                alt={rev.reviewerName}
+                className="w-14 h-14 rounded-full object-cover border-2 border-orange-400 shadow-lg"
               />
               <div>
-                <p className="font-semibold">{rev.reviewerName}</p>
-                <p className="text-sm text-gray-500">{rev.reviewerEmail}</p>
+                <p className="font-semibold text-gray-200">
+                  {rev.reviewerName}
+                </p>
+                <p className="text-sm text-gray-400">
+                  {rev.reviewerEmail}
+                </p>
               </div>
             </div>
 
-            <p className="flex items-center gap-2 font-semibold">
-              <Star size={18} className="text-orange-500" /> {rev.rating}
-            </p>
+            {/* Rating */}
+            <div className="flex items-center gap-2 mb-3">
+              <Star size={18} className="text-orange-400 fill-orange-400" />
+              <span className="font-semibold text-gray-200">
+                {rev.rating}
+              </span>
+            </div>
 
-            <p className="mt-3 text-gray-700">{rev.comment}</p>
+            {/* Comment */}
+            <p className="text-gray-300 leading-relaxed">
+              “{rev.comment}”
+            </p>
           </motion.div>
         ))}
       </div>

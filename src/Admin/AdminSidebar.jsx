@@ -7,71 +7,92 @@ import {
   FaClipboardList,
   FaStar,
   FaHeart,
-  FaUserTie,
   FaPlus,
   FaBars,
   FaChartPie,
 } from "react-icons/fa";
 import { AuthContext } from "../AuthContext";
+import { motion } from "framer-motion";
 
 const SidebarLayout = () => {
   const { user, loading } = useContext(AuthContext);
-  console.log("Logged User:", user);
-  console.log("User Role:", user?.role);
 
   const baseClass =
-    "flex items-center gap-3 px-4 py-2 rounded-xl font-medium transition-all duration-200";
-  const activeClass = "bg-orange-600 text-white shadow-lg scale-[1.02]";
-  const normalClass = "text-gray-700 hover:bg-orange-100 hover:text-orange-700";
+    "flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all duration-300";
+  const activeClass =
+    "bg-gradient-to-r from-orange-500 to-red-500 text-white shadow-lg scale-[1.03]";
+  const normalClass =
+    "text-gray-700 hover:bg-orange-100 hover:text-orange-700";
 
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
-        <span className="loading loading-spinner text-xl"></span>
+        <span className="loading loading-spinner loading-lg text-orange-500"></span>
       </div>
     );
   }
 
-  if (!user) return null; 
+  if (!user) return null;
 
   return (
-    <div className="drawer lg:drawer-open">
+    <div className="drawer lg:drawer-open min-h-screen bg-gradient-to-br from-orange-50 to-white">
       <input id="dashboard-drawer" type="checkbox" className="drawer-toggle" />
 
+      {/* ================= CONTENT ================= */}
       <div className="drawer-content flex flex-col">
-        <div className="lg:hidden p-4 shadow-md flex items-center justify-between bg-white/70 backdrop-blur-xl">
-          <label htmlFor="dashboard-drawer" className="btn btn-ghost text-2xl">
+        {/* Mobile Header */}
+        <div className="lg:hidden sticky top-0 z-40 p-4 flex items-center justify-between bg-white/80 backdrop-blur-xl shadow">
+          <label
+            htmlFor="dashboard-drawer"
+            className="btn btn-ghost text-2xl text-orange-600"
+          >
             <FaBars />
           </label>
-          <h2 className="text-xl font-bold text-orange-600">Dashboard</h2>
+          <h2 className="text-xl font-bold text-orange-600">
+            Dashboard
+          </h2>
         </div>
 
-        <div className="p-5">
+        <div className="p-4 md:p-6 lg:p-8">
           <Outlet />
         </div>
       </div>
 
+      {/* ================= SIDEBAR ================= */}
       <div className="drawer-side">
         <label htmlFor="dashboard-drawer" className="drawer-overlay"></label>
-        <div className="w-64 min-h-full bg-white/60 backdrop-blur-xl border-r shadow-xl p-5 flex flex-col relative">
-          <div className="absolute inset-y-0 right-0 w-[3px] bg-gradient-to-b from-orange-400 to-yellow-500"></div>
 
-          <h2 className="text-3xl font-bold text-orange-600 mb-8 drop-shadow-md">
-            Dashboard
-          </h2>
+        <motion.aside
+          initial={{ x: -80, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          className="w-72 min-h-full bg-white/70 backdrop-blur-2xl border-r shadow-2xl p-6 flex flex-col relative"
+        >
+          {/* Gradient Border */}
+          <div className="absolute inset-y-0 right-0 w-[4px] bg-gradient-to-b from-orange-400 to-red-500"></div>
 
-          <nav className="flex flex-col gap-3 text-lg">
+          {/* Header */}
+          <div className="mb-10">
+            <h2 className="text-3xl font-extrabold text-orange-600 drop-shadow">
+              Dashboard
+            </h2>
+            <p className="text-sm text-gray-500 mt-1">
+              Welcome, {user?.email}
+            </p>
+          </div>
+
+          {/* Navigation */}
+          <nav className="flex flex-col gap-3 text-[16px]">
             <NavLink
-  to={'/admin-sidebar'}
-  end   
-  className={({ isActive }) =>
-    `${baseClass} ${isActive ? activeClass : normalClass}`
-  }
->
-  <FaUser /> My Profile
-</NavLink>
+              to="/admin-sidebar"
+              end
+              className={({ isActive }) =>
+                `${baseClass} ${isActive ? activeClass : normalClass}`
+              }
+            >
+              <FaUser /> My Profile
+            </NavLink>
 
-
+            {/* USER */}
             {user.role === "user" && (
               <>
                 <NavLink
@@ -103,6 +124,7 @@ const SidebarLayout = () => {
               </>
             )}
 
+            {/* CHEF */}
             {user.role === "chef" && (
               <>
                 <NavLink
@@ -134,6 +156,7 @@ const SidebarLayout = () => {
               </>
             )}
 
+            {/* ADMIN */}
             {user.role === "admin" && (
               <>
                 <NavLink
@@ -165,7 +188,7 @@ const SidebarLayout = () => {
               </>
             )}
           </nav>
-        </div>
+        </motion.aside>
       </div>
     </div>
   );

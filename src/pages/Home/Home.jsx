@@ -3,77 +3,104 @@ import { motion } from "framer-motion";
 import ChefsSection from "../../chefSection";
 import DailyMealsSection from "../../DailyMealsSection";
 import HomeReviewsSection from "../../Reviews";
+import CategoriesSection from "../../CategoriesSection";
+import HowItWorksSection from "../../HowItWorksSection";
+import WhyChooseUs from "../../WhyChooseUs";
+import FAQSection from "../../FAQSection";
+import TipsSection from "../../TipsSection";
+import TrustSafetySection from "../../TrustSafetySection";
 
 const Hero = () => {
   return (
-    <section className="bg-gradient-to-r from-blue-50 to-white py-16 px-6">
-      <div className="container mx-auto flex flex-col-reverse lg:flex-row items-center gap-12">
+    <section className="relative bg-gradient-to-br from-gray-950 via-gray-900 to-gray-800 text-white overflow-hidden">
 
-        {/* LEFT CONTENT */}
-        <motion.div
-          className="flex-1 text-center lg:text-left"
-          initial={{ opacity: 0, x: -40 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8 }}
-        >
-          <h1 className="text-4xl lg:text-6xl font-bold text-gray-900 leading-tight">
-            Fresh, Homemade Meals  
-            <span className="text-blue-600"> Delivered to You.</span>
-          </h1>
+      {/* HERO AREA */}
+      <div className="min-h-[65vh] px-6 flex items-center">
+        <div className="container mx-auto flex flex-col-reverse lg:flex-row items-center gap-14">
 
-          <p className="mt-4 text-gray-600 text-lg max-w-xl">
-            Discover delicious home-cooked meals prepared by talented local chefs.  
-            Enjoy healthy, hygienic food at affordable prices — anytime, anywhere.
-          </p>
+          {/* LEFT CONTENT */}
+          <motion.div
+            className="flex-1 text-center lg:text-left"
+            initial={{ opacity: 0, x: -50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.9 }}
+          >
+            <h1 className="text-4xl lg:text-6xl font-extrabold leading-tight drop-shadow-xl">
+              Fresh, Homemade Meals  
+              <span className="block text-yellow-400 glow-text">
+                Delivered to You
+              </span>
+            </h1>
 
-          {/* SEARCH BAR */}
-          <div className="mt-6 flex gap-2 justify-center lg:justify-start">
-            <input
-              type="text"
-              placeholder="Search meals..."
-              className="input input-bordered w-full lg:w-72"
+            <p className="mt-6 text-gray-300 text-lg max-w-xl">
+              Discover premium home-cooked meals prepared by verified local chefs.  
+              Hygienic, affordable, and crafted with passion — just for you.
+            </p>
+
+            {/* SEARCH BAR */}
+            <div className="mt-8 flex gap-3 justify-center lg:justify-start">
+              <input
+                type="text"
+                placeholder="Search meals..."
+                className="w-full lg:w-72 px-4 py-3 rounded-xl bg-gray-900 border border-gray-700 text-white focus:outline-none focus:border-yellow-400"
+              />
+              <button className="px-6 py-3 bg-yellow-400 text-gray-900 font-semibold rounded-xl hover:scale-105 transition shadow-lg">
+                Search
+              </button>
+            </div>
+
+            {/* CTA BUTTONS */}
+            <div className="mt-8 flex gap-4 justify-center lg:justify-start">
+              <motion.button
+                whileHover={{ scale: 1.08 }}
+                className="px-7 py-3 bg-yellow-400 text-gray-900 font-bold rounded-full shadow-2xl"
+              >
+                Order Now
+              </motion.button>
+
+              <motion.button
+                whileHover={{ scale: 1.08 }}
+                className="px-7 py-3 border border-yellow-400 text-yellow-400 rounded-full hover:bg-yellow-400 hover:text-gray-900 transition"
+              >
+                Become a Chef
+              </motion.button>
+            </div>
+          </motion.div>
+
+          {/* RIGHT IMAGE */}
+          <motion.div
+            className="flex-1 flex justify-center relative"
+            initial={{ opacity: 0, x: 60 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.9 }}
+          >
+            <div className="absolute inset-0 bg-yellow-400/20 blur-3xl rounded-full"></div>
+
+            <img
+              src="https://images.pexels.com/photos/2814828/pexels-photo-2814828.jpeg"
+              alt="Chef"
+              className="relative w-full max-w-md rounded-3xl shadow-[0_40px_120px_rgba(0,0,0,0.9)]"
             />
-            <button className="px-5 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition">
-              Search
-            </button>
-          </div>
-
-          {/* CTA BUTTONS */}
-          <div className="mt-6 flex gap-4 justify-center lg:justify-start">
-            <button className="px-6 py-3 bg-green-600 text-white rounded-md hover:bg-green-700 transition">
-              Order Now
-            </button>
-            <button className="px-6 py-3 border border-blue-600 text-blue-600 rounded-md hover:bg-blue-50 transition">
-              Become a Chef
-            </button>
-          </div>
-        </motion.div>
-
-        {/* RIGHT IMAGE */}
-        <motion.div
-          className="flex-1 flex justify-center"
-          initial={{ opacity: 0, x: 40 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8 }}
-        >
-          <img
-            src="https://media.istockphoto.com/id/970096086/photo/people-in-a-cooking-class-enjoying-their-time.jpg?b=1&s=612x612&w=0&k=20&c=iUqqxEwsZn3rT3y1IF-U0hRfXLtumxiHW8EGGPpsxro="
-            alt="Chef"
-            className="w-full max-w-md drop-shadow-lg"
-          />
-        </motion.div>
+          </motion.div>
+        </div>
       </div>
 
-      <DailyMealsSection></DailyMealsSection>
+      {/* SCROLL INDICATOR */}
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 animate-bounce text-yellow-400">
+        ↓
+      </div>
 
-      <HomeReviewsSection></HomeReviewsSection>
-
-      <ChefsSection></ChefsSection>
-
-      
+      {/* NEXT SECTIONS (UNCHANGED) */}
+      <DailyMealsSection />
+      <HomeReviewsSection />
+      <ChefsSection />
+      <CategoriesSection></CategoriesSection>
+      <HowItWorksSection></HowItWorksSection>
+      <TipsSection></TipsSection>
+      <FAQSection></FAQSection>
+      <TrustSafetySection></TrustSafetySection>
+      <WhyChooseUs></WhyChooseUs>
     </section>
-
-    
   );
 };
 

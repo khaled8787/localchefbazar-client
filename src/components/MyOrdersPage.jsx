@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { useQuery } from "@tanstack/react-query";
 import Swal from "sweetalert2";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../AuthContext";
 import useAxiosPublic from "../AxiosSecure";
 
@@ -20,8 +20,13 @@ const MyOrdersPage = () => {
     enabled: !!user?.email,
   });
 
-  if (isLoading)
-    return <div className="text-center py-20 text-xl">Loading orders...</div>;
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center min-h-[60vh]">
+        <span className="loading loading-spinner loading-lg text-orange-500"></span>
+      </div>
+    );
+  }
 
   const handleRefresh = () => {
     refetch();
@@ -53,54 +58,49 @@ const MyOrdersPage = () => {
   };
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-10">
-      <h2 className="text-4xl font-bold text-orange-600 text-center mb-10">
+    <div className="min-h-screen bg-orange-50 p-4 md:p-8">
+      <h2 className="text-4xl md:text-5xl font-bold text-orange-600 text-center mb-10">
         My Orders
       </h2>
 
       <div className="text-center mb-6">
         <button
           onClick={handleRefresh}
-          className="btn bg-orange-500 hover:bg-orange-600 text-white rounded-xl"
+          className="btn bg-orange-500 hover:bg-orange-600 text-white rounded-xl px-6 py-2"
         >
           Refresh Orders
         </button>
       </div>
 
       {orders.length === 0 ? (
-        <p className="text-center text-gray-500">You have no orders yet.</p>
+        <p className="text-center text-gray-500 mt-20">
+          You have no orders yet.
+        </p>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {orders.map((order) => (
             <div
               key={order._id}
-              className="bg-white border rounded-2xl shadow-lg hover:shadow-2xl transition p-6"
+              className="relative bg-white border border-orange-100 shadow-lg rounded-3xl overflow-hidden hover:scale-[1.02] transition-all duration-300"
             >
-              <h3 className="text-2xl font-semibold text-orange-500 mb-3">
-                {order.mealName || order.items?.[0]?.name || "Meal Name"}
-              </h3>
+              {/* Card Glow */}
+              <div className="absolute -top-10 -right-10 w-32 h-32 bg-orange-400/20 rounded-full blur-3xl"></div>
 
-              <div className="space-y-2 text-gray-700">
-                <p>
-                  <b>Food Name:</b> {order.mealName || order.items?.[0]?.name}
-                </p>
-                <p>
-                  <b>Order Status:</b> {order.orderStatus || "pending"}
-                </p>
-                <p>
-                  <b>Price:</b> ${order.price || order.totalPrice}
-                </p>
-                <p>
-                  <b>Quantity:</b> {order.quantity || order.items?.length || 1}
-                </p>
-                <p>
+              <div className="p-5 space-y-3">
+                <h3 className="text-2xl font-bold text-orange-500">
+                  {order.mealName || order.items?.[0]?.name || "Meal Name"}
+                </h3>
+
+                <p className="text-gray-700"><b>Food Name:</b> {order.mealName || order.items?.[0]?.name}</p>
+                <p className="text-gray-700"><b>Order Status:</b> {order.orderStatus || "pending"}</p>
+                <p className="text-gray-700"><b>Price:</b> ${order.price || order.totalPrice}</p>
+                <p className="text-gray-700"><b>Quantity:</b> {order.quantity || order.items?.length || 1}</p>
+                <p className="text-gray-700">
                   <b>Delivery Time:</b>{" "}
                   {new Date(order.orderTime || order.createdAt).toLocaleString()}
                 </p>
-                <p>
-                  <b>Chef ID:</b> {order.chefId || "N/A"}
-                </p>
-                <p>
+                <p className="text-gray-700"><b>Chef ID:</b> {order.chefId || "N/A"}</p>
+                <p className="text-gray-700">
                   <b>Payment Status:</b>{" "}
                   <span
                     className={`px-2 py-1 rounded text-white ${
@@ -112,19 +112,17 @@ const MyOrdersPage = () => {
                     {order.paymentStatus || "unpaid"}
                   </span>
                 </p>
-              </div>
 
-              {(order.orderStatus === "accepted" &&
-                (order.paymentStatus || "unpaid") !== "paid") && (
-                <div className="mt-5">
+                {(order.orderStatus === "accepted" &&
+                  (order.paymentStatus || "unpaid") !== "paid") && (
                   <button
                     onClick={() => handlePay(order)}
-                    className="btn w-full bg-orange-500 hover:bg-orange-600 text-white rounded-xl"
+                    className="btn w-full bg-orange-500 hover:bg-orange-600 text-white rounded-xl mt-4"
                   >
                     Pay Now
                   </button>
-                </div>
-              )}
+                )}
+              </div>
             </div>
           ))}
         </div>

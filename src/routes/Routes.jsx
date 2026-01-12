@@ -23,6 +23,7 @@ import FavoriteMealsPage from '../components/FavoriteMealsPage';
 import ManageRequests from '../components/ManageRequests';
 import PlatformStatistics from '../components/PlatformStatistics';
 import AboutPage from '../components/Navbar/AboutPage';
+import ContactPage from '../components/Navbar/ContactPage';
 
 
 
@@ -44,6 +45,10 @@ export const router = createBrowserRouter([
       {
        path: 'about',
        element: <AboutPage></AboutPage>
+      },
+      {
+       path: 'contact',
+       element: <ContactPage></ContactPage>
       },
       {
         path: 'login',

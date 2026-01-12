@@ -14,31 +14,33 @@ const MyReviewPage = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-  const fetchReviews = async () => {
-    if (!user?.displayName) return;
+    const fetchReviews = async () => {
+      if (!user?.displayName) return;
 
-    setIsLoading(true);
-    try {
-      const res = await axiosPublic.get("/reviews");
+      setIsLoading(true);
+      try {
+        const res = await axiosPublic.get("/reviews");
+        const myReviews = res.data.filter(
+          (review) => review.reviewerName === user.displayName
+        );
+        setReviews(myReviews);
+      } catch (err) {
+        console.error(err);
+        Swal.fire("Error", "Failed to fetch reviews", "error");
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-      const myReviews = res.data.filter(
-        (review) => review.reviewerName === user.displayName
-      );
-
-      setReviews(myReviews);
-    } catch (err) {
-      console.error(err);
-      Swal.fire("Error", "Failed to fetch reviews", "error");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  fetchReviews();
-}, [user, axiosPublic]);
+    fetchReviews();
+  }, [user, axiosPublic]);
 
   if (loading || isLoading) {
-    return <div className="text-center py-20 text-xl">Loading reviews...</div>;
+    return (
+      <div className="flex justify-center items-center min-h-[60vh]">
+        <span className="loading loading-spinner loading-lg text-orange-500"></span>
+      </div>
+    );
   }
 
   const handleDelete = async (id) => {
@@ -99,13 +101,13 @@ const MyReviewPage = () => {
   };
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-10">
-      <h2 className="text-4xl font-bold text-orange-600 text-center mb-10">
+    <div className="min-h-screen bg-orange-50 px-4 py-10">
+      <h2 className="text-4xl md:text-5xl font-bold text-orange-600 text-center mb-10">
         My Reviews
       </h2>
 
       {reviews.length === 0 ? (
-        <p className="text-center text-gray-500">
+        <p className="text-center text-gray-500 mt-20">
           You have not submitted any reviews yet.
         </p>
       ) : (
@@ -113,24 +115,28 @@ const MyReviewPage = () => {
           {reviews.map((review) => (
             <div
               key={review._id}
-              className="bg-white border rounded-2xl shadow-lg p-6"
+              className="relative bg-white border border-orange-100 rounded-3xl shadow-lg p-6 hover:shadow-2xl transition transform hover:scale-[1.02]"
             >
-              <h3 className="text-xl font-semibold text-orange-500 mb-2">
-                Meal Name: {review.foodName}
-              </h3>
-              <p><b>Rating:</b> {review.rating} ⭐</p>
-              <p><b>Comment:</b> {review.comment}</p>
+              {/* subtle glow */}
+              <div className="absolute -top-5 -right-5 w-24 h-24 bg-orange-400/20 rounded-full blur-2xl"></div>
 
-              <div className="mt-4 flex gap-2">
+              <h3 className="text-xl font-bold text-orange-500 mb-2">
+                Meal: {review.foodName}
+              </h3>
+
+              <p className="text-gray-700"><b>Rating:</b> {review.rating} ⭐</p>
+              <p className="text-gray-700"><b>Comment:</b> {review.comment}</p>
+
+              <div className="mt-4 flex gap-3">
                 <button
                   onClick={() => handleEdit(review)}
-                  className="flex-1 btn btn-warning text-white"
+                  className="flex-1 btn bg-yellow-500 hover:bg-yellow-600 text-white rounded-xl transition"
                 >
                   Update
                 </button>
                 <button
                   onClick={() => handleDelete(review._id)}
-                  className="flex-1 btn btn-error text-white"
+                  className="flex-1 btn bg-red-500 hover:bg-red-600 text-white rounded-xl transition"
                 >
                   Delete
                 </button>
@@ -140,9 +146,10 @@ const MyReviewPage = () => {
         </div>
       )}
 
+      {/* Edit Modal */}
       {editingReview && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white rounded-xl p-6 w-96">
+        <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
+          <div className="bg-white rounded-2xl w-full max-w-md p-6 relative shadow-xl">
             <h3 className="text-2xl font-bold text-orange-500 mb-4">
               Edit Review
             </h3>
@@ -153,25 +160,26 @@ const MyReviewPage = () => {
               max="5"
               value={rating}
               onChange={(e) => setRating(e.target.value)}
-              className="w-full border rounded px-3 py-2 mb-4"
+              className="w-full border rounded-lg px-3 py-2 mb-4 focus:outline-none focus:ring-2 focus:ring-orange-300"
             />
 
             <textarea
               value={comment}
               onChange={(e) => setComment(e.target.value)}
-              className="w-full border rounded px-3 py-2 mb-4"
+              className="w-full border rounded-lg px-3 py-2 mb-4 focus:outline-none focus:ring-2 focus:ring-orange-300"
+              rows={4}
             />
 
-            <div className="flex justify-end gap-2">
+            <div className="flex justify-end gap-3">
               <button
                 onClick={() => setEditingReview(null)}
-                className="btn"
+                className="btn border border-gray-300 hover:bg-gray-100 rounded-xl"
               >
                 Cancel
               </button>
               <button
                 onClick={handleUpdate}
-                className="btn btn-success text-white"
+                className="btn bg-green-500 hover:bg-green-600 text-white rounded-xl"
               >
                 Save
               </button>
